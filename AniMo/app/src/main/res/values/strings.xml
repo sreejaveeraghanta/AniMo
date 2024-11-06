@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">AniMo</string>
+    <string name="title_home">Home</string>
+    <string name="title_stats">MyPet</string>
+    <string name="title_friends">Friends</string>
+    <string name="title_store">Store</string>
 </resources>
