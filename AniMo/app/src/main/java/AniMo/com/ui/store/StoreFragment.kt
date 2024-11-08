@@ -61,9 +61,9 @@ class StoreFragment : Fragment() {
         println("bg")
 
         // SET MUSIC ITEMS
-        picSet1 = storeViewModel.musicItems
-        nameSet1 = storeViewModel.musicNames
-        priceSet1 = storeViewModel.musicPrices
+        picSet2 = storeViewModel.musicItems
+        nameSet2 = storeViewModel.musicNames
+        priceSet2 = storeViewModel.musicPrices
 
         gridViewMusic = root.findViewById(R.id.musicStore)
 
