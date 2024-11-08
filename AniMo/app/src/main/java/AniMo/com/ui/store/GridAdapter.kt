@@ -9,7 +9,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 
-class GridAdapter (var imglist:Array<Int>, var activity: Activity) : BaseAdapter() {
+class GridAdapter (var imglist:Array<Int>,  var namelist: Array<String>,
+                   var pricelist:Array<String>, var activity: Activity) : BaseAdapter() {
 
     override fun getItem(p0: Int): Any {
         return imglist[p0]
@@ -29,10 +30,12 @@ class GridAdapter (var imglist:Array<Int>, var activity: Activity) : BaseAdapter
         val name = v.findViewById<TextView>(R.id.itemNameTextView)
         val buy = v.findViewById<Button>(R.id.itemBuyButton)
 
-//        val img = imglist[p0]
-//        gridpic.setImageResource(img)
-//        name.setText()
-//        buy.setText()
+        val img = imglist[p0]
+        gridpic.setImageResource(img)
+        val item = namelist[p0]
+        name.text = item
+        val price = pricelist[p0]
+        buy.text = price
         return v
     }
 }
