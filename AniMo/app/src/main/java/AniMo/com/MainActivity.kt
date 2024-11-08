@@ -5,9 +5,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import AniMo.com.databinding.ActivityMainBinding
+import AniMo.com.ui.tasks.NewTaskActivity
+import android.content.Intent
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,6 +37,8 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         binding.fab.setOnClickListener {
+            val intent = Intent(this, NewTaskActivity::class.java)
+            startActivity(intent)
             // Handle FAB click
         }
     }

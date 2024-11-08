@@ -1,0 +1,132 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:padding="8dp">
+
+
+    <LinearLayout
+        android:id="@+id/borderLayout"
+        android:layout_width="403dp"
+        android:layout_height="723dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="0dp"
+        android:background="#E95B8B"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:background="#FFFFFF"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="New Task"
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="26dp"
+                    android:layout_height="14dp"
+                    android:layout_marginEnd="4dp"
+                    android:src="@drawable/img" />
+            </LinearLayout>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Name"
+                android:textColor="#000000"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/etName"
+                android:layout_width="match_parent"
+                android:layout_height="51dp"
+                android:layout_marginBottom="10dp"
+                android:background="#E0E0E0"
+                android:hint="Enter task name"
+                android:padding="8dp" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Duration"
+                android:textColor="#000000"
+                android:textSize="14sp" />
+
+            <TimePicker
+                android:id="@+id/timePicker"
+                android:layout_width="344dp"
+                android:layout_height="111dp"
+                android:layout_marginBottom="10dp"
+                android:background="#E0E0E0"
+                android:scaleX="0.7"
+                android:scaleY="0.7"
+                android:timePickerMode="spinner" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Date"
+                android:textColor="#000000"
+                android:textSize="14sp" />
+
+            <DatePicker
+                android:id="@+id/datePicker"
+                android:layout_width="338dp"
+                android:layout_height="223dp"
+                android:layout_marginBottom="10dp"
+                android:background="#E0E0E0"
+                android:calendarViewShown="true"
+                android:scaleX="0.7"
+                android:scaleY="0.7" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Description"
+                android:textColor="#000000"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/etDescription"
+                android:layout_width="match_parent"
+                android:layout_height="108dp"
+                android:layout_marginBottom="10dp"
+                android:background="#E0E0E0"
+                android:hint="Enter description"
+                android:minHeight="80dp"
+                android:padding="8dp"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
+
+
