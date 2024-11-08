@@ -48,7 +48,6 @@ class StoreFragment : Fragment() {
 //        }
 
 
-        println("str")
         // SET BG ITEMS
         picSet1 = storeViewModel.backgroundItems
         nameSet1 = storeViewModel.bgNames
@@ -58,7 +57,6 @@ class StoreFragment : Fragment() {
 
         gridAdaptBG = GridAdapter(picSet1, nameSet1, priceSet1, requireActivity())
         gridViewBG.adapter = gridAdaptBG
-        println("bg")
 
         // SET MUSIC ITEMS
         picSet2 = storeViewModel.musicItems
@@ -69,8 +67,6 @@ class StoreFragment : Fragment() {
 
         gridAdaptMusic = GridAdapter(picSet2, nameSet2, priceSet2, requireActivity())
         gridViewMusic.adapter = gridAdaptMusic
-
-        println("ms")
 
 
 
