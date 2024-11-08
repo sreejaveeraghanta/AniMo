@@ -34,5 +34,9 @@ class MainActivity : AppCompatActivity() {
         )
 
         navView.setupWithNavController(navController)
+
+        binding.fab.setOnClickListener {
+            // Handle FAB click
+        }
     }
 }
