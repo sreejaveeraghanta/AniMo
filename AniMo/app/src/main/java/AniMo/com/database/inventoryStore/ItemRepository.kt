@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 // deciding whether to fetch data from a network or use results cached in a local database.
 class ItemRepository(private val itemDatabaseDao: ItemDatabaseDao) {
 
-    val allInvenItems: Flow<List<Item>> = itemDatabaseDao.getAllItems()
+    val allItems: Flow<List<Item>> = itemDatabaseDao.getAllItems()
 
     fun insert(item: Item){
         CoroutineScope(IO).launch{

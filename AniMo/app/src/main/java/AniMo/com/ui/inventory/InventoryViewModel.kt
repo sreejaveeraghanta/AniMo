@@ -1,27 +1,13 @@
-package AniMo.com.ui.store
+package AniMo.com.ui.inventory
 
-import AniMo.com.R
 import AniMo.com.database.inventoryStore.Item
 import AniMo.com.database.inventoryStore.ItemRepository
 import androidx.lifecycle.*
 import java.lang.IllegalArgumentException
 
 
-class StoreViewModel(private val repository: ItemRepository) : ViewModel() {
+class InventoryViewModel(private val repository: ItemRepository) : ViewModel() {
     val allItemsLiveData: LiveData<List<Item>> = repository.allItems.asLiveData()
-    val backgroundItems = arrayOf(R.drawable.igloo, R.drawable.autumn, R.drawable.castle,
-        R.drawable.flowers)
-
-    val bgNames = arrayOf("Winter", "Autumn", "Haunted", "Spring")
-
-    val bgPrices = arrayOf("200 \u2764", "200 \u2764", "200 \u2764", "200 \u2764", "200 \u2764")
-
-    val musicItems = arrayOf(R.drawable.rock,
-        R.drawable.guitar)
-
-    val musicNames = arrayOf("Rock On!", "Country Sweets")
-
-    val musicPrices = arrayOf("200 \u2764", "200 \u2764", "200 \u2764", "200 \u2764")
 
     fun insert(item: Item) {
         repository.insert(item)
@@ -42,10 +28,10 @@ class StoreViewModel(private val repository: ItemRepository) : ViewModel() {
     }
 }
 
-class StoreViewModelFactory (private val repository: ItemRepository) : ViewModelProvider.Factory {
+class InventoryViewModelFactory (private val repository: ItemRepository) : ViewModelProvider.Factory {
     override fun<T: ViewModel> create(modelClass: Class<T>) : T{ //create() creates a new instance of the modelClass, which is CommentViewModel in this case.
-        if(modelClass.isAssignableFrom(StoreViewModel::class.java))
-            return StoreViewModel(repository) as T
+        if(modelClass.isAssignableFrom(InventoryViewModel::class.java))
+            return InventoryViewModel(repository) as T
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

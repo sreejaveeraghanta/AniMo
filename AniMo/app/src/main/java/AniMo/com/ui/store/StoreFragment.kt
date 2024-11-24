@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import AniMo.com.databinding.FragmentStoreBinding
+import AniMo.com.ui.inventory.InventoryFragment
 import android.widget.Button
 import android.widget.GridView
 
@@ -31,6 +31,8 @@ class StoreFragment : Fragment() {
     private lateinit var nameSet2: Array<String>
     private lateinit var priceSet2: Array<String>
 
+    private lateinit var invenButton: Button
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,6 +48,13 @@ class StoreFragment : Fragment() {
 //        storeViewModel.text.observe(viewLifecycleOwner) {
 //            textView.text = it
 //        }
+
+        // button to go to inventory
+        invenButton = root.findViewById(R.id.inven_button)
+        invenButton.setOnClickListener(){
+            // open inventory page
+            val invenFrag = InventoryFragment()
+        }
 
 
         // SET BG ITEMS
