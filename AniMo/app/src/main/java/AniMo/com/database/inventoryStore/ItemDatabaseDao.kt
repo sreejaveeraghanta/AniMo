@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 interface ItemDatabaseDao {
 
     @Insert
-    suspend fun insertItem(comment: Item)
+    suspend fun insertItem(item: Item)
 
     //A Flow is an async sequence of values
     //Flow produces values one at a time (instead of all at once) that can generate values
@@ -20,12 +20,12 @@ interface ItemDatabaseDao {
     //It supports coroutines throughout its API, so you can transform a flow using coroutines as well!
     //Code inside the flow { ... } builder block can suspend. So the function is no longer marked with suspend modifier.
     //See more details here: https://kotlinlang.org/docs/flow.html#flows
-    @Query("SELECT * FROM comment_table")
+    @Query("SELECT * FROM item_table")
     fun getAllItems(): Flow<List<Item>>
 
-    @Query("DELETE FROM comment_table")
+    @Query("DELETE FROM item_table")
     suspend fun deleteAll()
 
-    @Query("DELETE FROM comment_table WHERE id = :key") //":" indicates that it is a Bind variable
+    @Query("DELETE FROM item_table WHERE id = :key") //":" indicates that it is a Bind variable
     suspend fun deleteItem(key: Long)
 }
