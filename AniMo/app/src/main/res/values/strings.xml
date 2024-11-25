@@ -4,4 +4,13 @@
     <string name="title_stats">MyPet</string>
     <string name="title_friends">Friends</string>
     <string name="title_store">Store</string>
+    <string name="welcome_text">Welcome to AniMo</string>
+    <string name="description_text">An app where productivity meets with a virtual pet</string>
+    <string name="login_prompt">Please sign in to get started!</string>
+    <string name="username_text">Username:</string>
+    <string name="password_text">Password:</string>
+    <string name="create_account_text">Don\'t have an account?</string>
+    <string name="create_account">Create Account</string>
+    <string name="continue_as_guest">continue as guest</string>
+    <string name="name">Full Name:</string>
 </resources>

@@ -19,6 +19,11 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val name = intent.getStringExtra("name")
+        val username = intent.getStringExtra("username")
+
+        println(name)
+        println(username)
 
         val navView: BottomNavigationView = binding.navView
 
