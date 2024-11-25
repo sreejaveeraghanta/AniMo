@@ -46,11 +46,11 @@ class LoginActivity : AppCompatActivity() {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         if (snapshot.exists()) {
                             for (userdata in snapshot.children) {
-                                println(userdata)
                                 val user = userdata.getValue(User::class.java)
                                 if (user != null && user.password == Util.hashPassword(password.text.toString())) {
                                     Toast.makeText(this@LoginActivity, "Successfully logged in", Toast.LENGTH_SHORT).show()
                                     val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                                    intent.putExtra("name", user.name)
                                     intent.putExtra("username", username.text.toString())
                                     startActivity(intent)
                                     finish()
@@ -72,7 +72,6 @@ class LoginActivity : AppCompatActivity() {
             else {
                 Toast.makeText(this, "Cannot login please enter username and password", Toast.LENGTH_SHORT).show()
             }
-            println("yes")
         }
         createAccountButton = findViewById(R.id.create_account_button)
         binding.createAccountButton.setOnClickListener() {

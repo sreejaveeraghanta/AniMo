@@ -22,8 +22,11 @@ class MainActivity : AppCompatActivity() {
         val name = intent.getStringExtra("name")
         val username = intent.getStringExtra("username")
 
-        println(name)
-        println(username)
+        val sharedPreferences = getSharedPreferences("user", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString("name", name)
+        editor.putString("username", username)
+        editor.apply()
 
         val navView: BottomNavigationView = binding.navView
 

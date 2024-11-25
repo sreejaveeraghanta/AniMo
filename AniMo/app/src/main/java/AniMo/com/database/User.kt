@@ -1,9 +1,12 @@
 package AniMo.com.database
 
-import kotlin.collections.ArrayList
-
 data class User(
     val name: String = "",
     val username: String = "",
     val password: String = "",
+    val treats: Int = 0,
+    val tasksCompleted: Int = 0,
+    val visitors: Int = 0,
+    val visited: Int = 0,
+    val timeSpent: Double = 0.0,
 )
