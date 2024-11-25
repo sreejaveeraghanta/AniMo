@@ -3,6 +3,7 @@ package AniMo.com.ui.tasks
 import AniMo.com.R
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.DatePicker
@@ -12,6 +13,8 @@ import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.util.Calendar
 
 class NewTaskActivity: AppCompatActivity() {
@@ -90,10 +93,14 @@ class NewTaskActivity: AppCompatActivity() {
             if (taskName.isEmpty() || selectedDate.isEmpty() || selectedTime.isEmpty()) {
                 Toast.makeText(this, "Please fill all fields!", Toast.LENGTH_SHORT).show()
             } else {
-                val taskDetails =
-                    "Task: $taskName\nPriority: $priority\nDate: $selectedDate\nTime: $selectedTime"
-                Toast.makeText(this, taskDetails, Toast.LENGTH_LONG).show()
-                finish()
+                val newTask = Task(taskName, priority, selectedDate, selectedTime)
+                saveTask(newTask)
+                Toast.makeText(this, "Task saved!", Toast.LENGTH_SHORT).show()
+
+                // Navigate to TaskListActivity
+                val intent = Intent(this, TaskListActivity::class.java)
+                startActivity(intent)
+                //finish() // Close the current activity
             }
         }
 
@@ -102,6 +109,18 @@ class NewTaskActivity: AppCompatActivity() {
             Toast.makeText(this, "Task creation cancelled", Toast.LENGTH_SHORT).show()
             finish()
         }
+    }
+
+    private fun saveTask(task: Task) {
+        val sharedPreferences = getSharedPreferences("tasks", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        val gson = Gson()
+        val json = sharedPreferences.getString("task_list", null)
+        val type = object : TypeToken<MutableList<Task>>() {}.type
+        val taskList: MutableList<Task> = gson.fromJson(json, type) ?: mutableListOf()
+        taskList.add(task)
+        editor.putString("task_list", gson.toJson(taskList))
+        editor.apply()
     }
 
 }

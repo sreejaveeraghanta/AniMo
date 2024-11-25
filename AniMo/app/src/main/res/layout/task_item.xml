@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="?attr/selectableItemBackground">
+
+    <TextView
+        android:id="@+id/task_name_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Task Name"
+        android:textStyle="bold"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/task_priority_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Priority: 5" />
+
+    <TextView
+        android:id="@+id/task_date_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date: 12/12/2024" />
+
+    <TextView
+        android:id="@+id/task_time_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time: 14:30" />
+</LinearLayout>
