@@ -49,7 +49,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:text="View History"
-        android:backgroundTint="@color/teal_700"
         android:textColor="@android:color/white"
         android:layout_gravity="center" />
 </LinearLayout>

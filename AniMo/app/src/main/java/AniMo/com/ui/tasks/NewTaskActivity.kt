@@ -97,10 +97,8 @@ class NewTaskActivity: AppCompatActivity() {
                 saveTask(newTask)
                 Toast.makeText(this, "Task saved!", Toast.LENGTH_SHORT).show()
 
-                // Navigate to TaskListActivity
                 val intent = Intent(this, TaskListActivity::class.java)
                 startActivity(intent)
-                //finish() // Close the current activity
             }
         }
 
