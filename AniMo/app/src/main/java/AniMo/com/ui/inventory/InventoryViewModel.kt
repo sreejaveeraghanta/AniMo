@@ -13,17 +13,25 @@ class InventoryViewModel(private val repository: ItemRepository) : ViewModel() {
         repository.insert(item)
     }
 
-    fun deleteFirst(){
+    fun getItem(pos: Int){
         val itemList = allItemsLiveData.value
-        if (itemList != null && itemList.size > 0){
-            val id = itemList[0].id
+        if (!itemList.isNullOrEmpty()){
+            val id = itemList[pos].id
+            repository.getItem(id)
+        }
+    }
+
+    fun deleteItem(pos: Int){
+        val itemList = allItemsLiveData.value
+        if (!itemList.isNullOrEmpty()){
+            val id = itemList[pos].id
             repository.delete(id)
         }
     }
 
     fun deleteAll(){
         val itemList = allItemsLiveData.value
-        if (itemList != null && itemList.size > 0)
+        if (!itemList.isNullOrEmpty())
             repository.deleteAll()
     }
 }

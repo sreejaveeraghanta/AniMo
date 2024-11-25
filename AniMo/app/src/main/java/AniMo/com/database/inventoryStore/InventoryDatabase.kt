@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Item::class], version = 1)
+@Database(entities = [Item::class], version = 2, exportSchema = true)
 abstract class InventoryDatabase : RoomDatabase() { //XD: Room automatically generates implementations of your abstract CommentDatabase class.
     abstract val itemDatabaseDao: ItemDatabaseDao
 
@@ -19,7 +19,7 @@ abstract class InventoryDatabase : RoomDatabase() { //XD: Room automatically gen
                 var instance = INSTANCE
                 if(instance == null){
                     instance = Room.databaseBuilder(context.applicationContext,
-                        InventoryDatabase::class.java, "item_table").build()
+                        InventoryDatabase::class.java, "item_table").fallbackToDestructiveMigration().build()
                     INSTANCE = instance
                 }
                 return instance

@@ -19,6 +19,12 @@ class ItemRepository(private val itemDatabaseDao: ItemDatabaseDao) {
         }
     }
 
+    fun getItem(id: Long){
+        CoroutineScope(IO).launch{
+            itemDatabaseDao.getItem(id)
+        }
+    }
+
     fun delete(id: Long){
         CoroutineScope(IO).launch {
             itemDatabaseDao.deleteItem(id)

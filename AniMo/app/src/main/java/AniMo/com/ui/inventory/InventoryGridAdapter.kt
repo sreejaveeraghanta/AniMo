@@ -9,8 +9,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 
-class InventoryGridAdapter (var imglist:Array<Int>, var namelist: Array<String>,
-                            var pricelist:Array<String>, var activity: Activity) : BaseAdapter() {
+class InventoryGridAdapter (var imglist:Array<Int>, var namelist: Array<String>, var activity: Activity) : BaseAdapter() {
 
     override fun getItem(p0: Int): Any {
         return imglist[p0]
@@ -25,17 +24,18 @@ class InventoryGridAdapter (var imglist:Array<Int>, var namelist: Array<String>,
     }
 
     override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
-        val v: View = View.inflate(activity, R.layout.store_item, null)
+        val v: View = View.inflate(activity, R.layout.inventory_item, null)
         val gridpic = v.findViewById<ImageView>(R.id.itemImageView)
         val name = v.findViewById<TextView>(R.id.itemNameTextView)
-        val buy = v.findViewById<Button>(R.id.itemBuyButton)
+        val equip = v.findViewById<Button>(R.id.itemEquipButton)
 
         val img = imglist[p0]
         gridpic.setImageResource(img)
         val item = namelist[p0]
         name.text = item
-        val price = pricelist[p0]
-        buy.text = price
+        equip.setOnClickListener(){
+            // open home page and use?
+        }
         return v
     }
 }

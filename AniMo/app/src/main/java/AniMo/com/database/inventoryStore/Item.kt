@@ -11,13 +11,22 @@ data class Item (
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0L,
 
-    @ColumnInfo(name = "itemName_column")
+    @ColumnInfo(name = "name")
     var name: String = "",
 
-    @ColumnInfo(name = "price_column")
+    @ColumnInfo(name = "price")
     var price: Int = 0,
 
-    @ColumnInfo(name = "image_column")
-    var img: String = ""
+    @ColumnInfo(name = "image")
+    var image: String = "",
+
+    @ColumnInfo(name = "resource")
+    var resource: String = "",
+
+    @ColumnInfo(name = "type")
+    var type: String = "",
+
+    @ColumnInfo(name = "equipped")
+    var equipped: Int = 0
 
 )

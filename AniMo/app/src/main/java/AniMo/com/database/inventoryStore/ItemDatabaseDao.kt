@@ -23,6 +23,9 @@ interface ItemDatabaseDao {
     @Query("SELECT * FROM item_table")
     fun getAllItems(): Flow<List<Item>>
 
+    @Query("SELECT * FROM item_table WHERE id = :key")
+    fun getItem(key: Long): Item
+
     @Query("DELETE FROM item_table")
     suspend fun deleteAll()
 
