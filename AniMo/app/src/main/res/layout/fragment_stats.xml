@@ -16,14 +16,13 @@
         android:textSize="20sp"
         android:paddingBottom="140dp"/>
 
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal">
         <TextView
-            android:text="Times Fed--"
+            android:text="Total Treats--"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="10dp"
@@ -35,66 +34,12 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
         <TextView
-            android:text="1000"
+            android:id="@+id/treats"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:paddingEnd="20dp"
             tools:ignore="RtlSymmetry" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-        <TextView
-            android:paddingStart="37dp"
-            android:text="Kibble--"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:paddingRight="50dp"
-            />
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-        <TextView
-            android:text="668"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:paddingEnd="20dp"
-            />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-        <TextView
-            android:paddingStart="37dp"
-            android:text="Treats--"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:paddingRight="50dp"
-            />
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-        <TextView
-            android:text="332"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textSize="20sp"
-            android:paddingEnd="20dp"
-            />
     </LinearLayout>
 
     <Space
@@ -121,7 +66,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
         <TextView
-            android:text="981"
+            android:id="@+id/tasks_completed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
@@ -152,7 +97,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
         <TextView
-            android:text="50"
+            android:id="@+id/visitors"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingEnd="20dp"
@@ -184,7 +129,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
         <TextView
-            android:text="27"
+            android:id="@+id/visited"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingEnd="20dp"
@@ -217,7 +162,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
         <TextView
-            android:text="12:00"
+            android:id="@+id/time_spent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingEnd="20dp"
