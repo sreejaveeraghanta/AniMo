@@ -3,12 +3,14 @@ package AniMo.com.ui.store
 import AniMo.com.R
 import AniMo.com.database.inventoryStore.Item
 import android.app.Activity
+import android.net.Uri
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 
 class GridAdapter (var itemList: List<Item>, var viewmodel: StoreViewModel, var activity: Activity) : BaseAdapter() {
 
@@ -30,8 +32,22 @@ class GridAdapter (var itemList: List<Item>, var viewmodel: StoreViewModel, var 
         val name = v.findViewById<TextView>(R.id.itemNameTextView)
         val buy = v.findViewById<Button>(R.id.itemBuyButton)
 
+
         val itm = itemList[p0]
-        val img = v.resources.getIdentifier(itm.image, "drawable", "AniMo.com.ui.store")
+        var img = 0
+        if (itm.image == "igloo"){
+            img = R.drawable.igloo
+        } else if (itm.image == "rockstar"){
+            img = R.drawable.rockstar
+        } else if (itm.image == "guitar"){
+            img = R.drawable.guitar
+        } else if (itm.image == "vinyl"){
+            img = R.drawable.vinyl
+        } else if (itm.image == "cherryblossom"){
+            img = R.drawable.cherryblossom
+        }
+//            ResourcesCompat.getDrawable(tst, null)
+//        getIdentifier(itm.image, "drawable", "AniMo.com.ui.store")
         gridpic.setImageResource(img)
         name.text = itm.name
         val txt = itm.price.toString() + " \u2764"

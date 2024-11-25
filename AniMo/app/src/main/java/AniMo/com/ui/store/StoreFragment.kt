@@ -6,7 +6,8 @@ import AniMo.com.database.inventoryStore.ItemDatabaseDao
 import AniMo.com.database.inventoryStore.ItemRepository
 import AniMo.com.database.inventoryStore.StoreDatabase
 import AniMo.com.databinding.FragmentStoreBinding
-import AniMo.com.ui.inventory.InventoryFragment
+import AniMo.com.ui.inventory.InventoryActivity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -65,9 +66,11 @@ class StoreFragment : Fragment() {
         invenButton = root.findViewById(R.id.inven_button)
         invenButton.setOnClickListener(){
             // open inventory page
-            val transact = requireActivity().supportFragmentManager.beginTransaction()
-            transact.replace(R.id.storepage, InventoryFragment())
-            transact.commit()
+            val intent = Intent(activity, InventoryActivity::class.java)
+            startActivity(intent)
+//            val transact = requireActivity().supportFragmentManager.beginTransaction()
+//            transact.replace(R.id.storepage, InventoryActivity())
+//            transact.commit()
         }
 
         //
