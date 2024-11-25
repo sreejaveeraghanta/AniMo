@@ -1,132 +1,125 @@
-<RelativeLayout
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    android:padding="8dp">
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center_vertical"
+    tools:context=".ui.tasks.NewTaskActivity">
 
+    <!-- Task Label -->
+    <TextView
+        android:id="@+id/task_page_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter Task Details"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="24dp"
+        android:gravity="center_horizontal" />
+
+    <!-- Task Name Input -->
+    <EditText
+        android:id="@+id/task_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Task Name"
+        android:inputType="text"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Task Priority Slider -->
+    <TextView
+        android:id="@+id/slider_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Task Priority:"
+        android:layout_marginTop="16dp" />
+
+
+    <SeekBar
+        android:id="@+id/task_priority_slider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="10"
+        android:progress="5"
+        android:layout_marginTop="8dp" />
+
+    <!-- Selected Priority Display -->
+    <TextView
+        android:id="@+id/priority_display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Priority: 5"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp" />
 
     <LinearLayout
-        android:id="@+id/borderLayout"
-        android:layout_width="403dp"
-        android:layout_height="723dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="0dp"
-        android:background="#E95B8B"
-        android:orientation="vertical"
-        android:padding="12dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:background="#FFFFFF"
-            android:orientation="vertical"
-            android:padding="8dp">
+            android:text="Duration (minutes):"
+            android:layout_marginEnd="8dp" />
 
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="New Task"
-                    android:textColor="#000000"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:layout_width="26dp"
-                    android:layout_height="14dp"
-                    android:layout_marginEnd="4dp"
-                    android:src="@drawable/img" />
-            </LinearLayout>
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Name"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/etName"
-                android:layout_width="match_parent"
-                android:layout_height="51dp"
-                android:layout_marginBottom="10dp"
-                android:background="#E0E0E0"
-                android:hint="Enter task name"
-                android:padding="8dp" />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Duration"
-                android:textColor="#000000"
-                android:textSize="14sp" />
-
-            <TimePicker
-                android:id="@+id/timePicker"
-                android:layout_width="344dp"
-                android:layout_height="111dp"
-                android:layout_marginBottom="10dp"
-                android:background="#E0E0E0"
-                android:scaleX="0.7"
-                android:scaleY="0.7"
-                android:timePickerMode="spinner" />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Date"
-                android:textColor="#000000"
-                android:textSize="14sp" />
-
-            <DatePicker
-                android:id="@+id/datePicker"
-                android:layout_width="338dp"
-                android:layout_height="223dp"
-                android:layout_marginBottom="10dp"
-                android:background="#E0E0E0"
-                android:calendarViewShown="true"
-                android:scaleX="0.7"
-                android:scaleY="0.7" />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Description"
-                android:textColor="#000000"
-                android:textSize="14sp" />
-
-            <EditText
-                android:id="@+id/etDescription"
-                android:layout_width="match_parent"
-                android:layout_height="108dp"
-                android:layout_marginBottom="10dp"
-                android:background="#E0E0E0"
-                android:hint="Enter description"
-                android:minHeight="80dp"
-                android:padding="8dp"
-                android:textSize="14sp" />
-
-        </LinearLayout>
+        <EditText
+            android:id="@+id/task_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="e.g., 60" />
     </LinearLayout>
-</RelativeLayout>
+
+    <!-- Date and Time Buttons -->
+    <Button
+        android:id="@+id/select_date_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Date"
+        android:layout_marginBottom="12dp" />
 
 
+    <Button
+        android:id="@+id/select_time_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Time"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Spacer to push buttons to the bottom -->
+
+    <!-- Save and Cancel Buttons -->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="950dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="24dp">
+
+        <Button
+            android:id="@+id/save_task_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Save Task"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/cancel_task_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:layout_weight="1" />
+    </LinearLayout>
+</LinearLayout>

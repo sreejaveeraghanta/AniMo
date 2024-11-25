@@ -56,6 +56,7 @@ dependencies {
     implementation (libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.firebase.database)
     testImplementation(libs.junit)
+    implementation(libs.gson)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
