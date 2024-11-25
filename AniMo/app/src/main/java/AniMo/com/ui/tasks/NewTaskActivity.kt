@@ -17,13 +17,14 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.util.Calendar
 
-class NewTaskActivity: AppCompatActivity() {
+class NewTaskActivity : AppCompatActivity() {
 
     private lateinit var taskNameInput: EditText
     private lateinit var slider: SeekBar
     private lateinit var priorityDisplay: TextView
     private lateinit var dateButton: Button
     private lateinit var timeButton: Button
+    private lateinit var durationInput: EditText
     private lateinit var saveButton: Button
     private lateinit var cancelButton: Button
 
@@ -34,17 +35,19 @@ class NewTaskActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_task)
 
+        // Initialize views
         taskNameInput = findViewById(R.id.task_name)
         slider = findViewById(R.id.task_priority_slider)
         priorityDisplay = findViewById(R.id.priority_display)
         dateButton = findViewById(R.id.select_date_button)
         timeButton = findViewById(R.id.select_time_button)
+        durationInput = findViewById(R.id.task_duration)
         saveButton = findViewById(R.id.save_task_button)
         cancelButton = findViewById(R.id.cancel_task_button)
 
         val calendar = Calendar.getInstance()
 
-        // Update slider value display
+        // Priority slider listener
         slider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 priorityDisplay.text = "Priority: $progress"
@@ -84,21 +87,26 @@ class NewTaskActivity: AppCompatActivity() {
             timePicker.show()
         }
 
-
         // Save button logic
         saveButton.setOnClickListener {
             val taskName = taskNameInput.text.toString()
             val priority = slider.progress
+            val durationText = durationInput.text.toString()
 
-            if (taskName.isEmpty() || selectedDate.isEmpty() || selectedTime.isEmpty()) {
+            if (taskName.isEmpty() || selectedDate.isEmpty() || selectedTime.isEmpty() || durationText.isEmpty()) {
                 Toast.makeText(this, "Please fill all fields!", Toast.LENGTH_SHORT).show()
             } else {
-                val newTask = Task(taskName, priority, selectedDate, selectedTime)
-                saveTask(newTask)
-                Toast.makeText(this, "Task saved!", Toast.LENGTH_SHORT).show()
+                val duration = durationText.toIntOrNull()
+                if (duration == null || duration <= 0) {
+                    Toast.makeText(this, "Please enter a valid duration!", Toast.LENGTH_SHORT).show()
+                } else {
+                    val newTask = Task(taskName, priority, selectedDate, selectedTime, duration)
+                    saveTask(newTask)
+                    Toast.makeText(this, "Task saved!", Toast.LENGTH_SHORT).show()
 
-                val intent = Intent(this, TaskListActivity::class.java)
-                startActivity(intent)
+                    val intent = Intent(this, TaskListActivity::class.java)
+                    startActivity(intent)
+                }
             }
         }
 
@@ -120,5 +128,4 @@ class NewTaskActivity: AppCompatActivity() {
         editor.putString("task_list", gson.toJson(taskList))
         editor.apply()
     }
-
 }

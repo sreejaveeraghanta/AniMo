@@ -46,7 +46,6 @@ class TaskListActivity : AppCompatActivity() {
         backToHomeButton.setOnClickListener {
             val intent = Intent(this, HomeFragment::class.java)
             startActivity(intent)
-            finish()
         }
 
     }
