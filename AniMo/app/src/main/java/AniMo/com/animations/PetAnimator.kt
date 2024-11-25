@@ -56,4 +56,6 @@ class PetAnimator(private val context: Context, private val petView: ImageView) 
             petAnimation.stop()
         }
     }
+
+
 }

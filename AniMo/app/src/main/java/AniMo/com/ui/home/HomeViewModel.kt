@@ -3,6 +3,8 @@ package AniMo.com.ui.home
 import AniMo.com.R
 import AniMo.com.animations.PetAnimator
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,7 +12,7 @@ import androidx.lifecycle.ViewModel
 
 class HomeViewModel : ViewModel() {
 
-    private var petAnimator: PetAnimator? = null
+    //private var petAnimator: PetAnimator? = null
 
     // Background resource ID
     private val _backgroundResId = MutableLiveData<Int>().apply {
@@ -33,14 +35,38 @@ class HomeViewModel : ViewModel() {
     }
 
     // Initialize PetAnimator and start wandering
-    fun initializePetAnimator(context: Context, petView: ImageView) {
-        petAnimator = PetAnimator(context, petView).apply {
-            startAnimation()
+//    fun initializePetAnimator(context: Context, petView: ImageView) {
+//        petAnimator = PetAnimator(context, petView).apply {
+//            startAnimation()
+//        }
+//    }
+
+    // Stop the animator to release resources when no longer needed
+//    fun stopPetAnimator() {
+//        petAnimator?.stop()
+//    }
+
+
+    private val _currentAnimation = MutableLiveData<String?>()
+    val currentAnimation: LiveData<String?> = _currentAnimation
+
+    // Pet interaction handler
+    fun handleInteraction(interactionType: String, duration: Long) {
+        when (interactionType) {
+            "How do you feel?" -> playAnimation("happy_animation", duration)
+            else -> playAnimation("idle_animation", 0L) // Default fallback
         }
     }
 
-    // Stop the animator to release resources when no longer needed
-    fun stopPetAnimator() {
-        petAnimator?.stop()
+    private fun playAnimation(animationType: String, duration: Long) {
+        _currentAnimation.value = animationType
+
+        if (duration > 0) {
+            // Reset to idle after the animation duration
+            Handler(Looper.getMainLooper()).postDelayed({
+                _currentAnimation.value = "idle_animation"
+            }, duration)
+        }
     }
+
 }

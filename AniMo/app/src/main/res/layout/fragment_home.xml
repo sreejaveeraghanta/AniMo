@@ -24,13 +24,17 @@
         android:contentDescription="Carpet for pet" />
 
     <!-- Animated Pet -->
-    <ImageView
-        android:id="@+id/petImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <AniMo.com.animations.SpriteAnimationView
+        android:id="@+id/spriteAnimationView"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:clickable="true"
+        android:focusable="true"
         android:layout_centerHorizontal="true"
         android:layout_alignBottom="@id/carpetImageView"
         android:layout_marginBottom="80dp"
-        android:contentDescription="Pet Animation" />
+        android:contentDescription="Pet Animation"/>
+
+
 
 </RelativeLayout>
