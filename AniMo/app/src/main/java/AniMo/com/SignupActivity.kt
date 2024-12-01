@@ -44,8 +44,8 @@ class SignupActivity: AppCompatActivity() {
                 val user = User(nameValue, emailAddress, usernameValue, hashedPassword)
                 CoroutineScope(IO).launch {
                     reference.child(usernameValue).setValue(user)
-                    Toast.makeText(this@SignupActivity, "Successfully added user", Toast.LENGTH_SHORT).show()
                 }
+                Toast.makeText(this@SignupActivity, "Successfully added user", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, MainActivity::class.java)
                 intent.putExtra("name", nameValue)
                 intent.putExtra("username", usernameValue)
