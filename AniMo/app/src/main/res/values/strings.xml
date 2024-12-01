@@ -13,4 +13,5 @@
     <string name="create_account">Create Account</string>
     <string name="continue_as_guest">continue as guest</string>
     <string name="name">Full Name:</string>
+    <string name="email">Email:</string>
 </resources>

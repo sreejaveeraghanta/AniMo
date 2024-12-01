@@ -14,6 +14,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -39,35 +42,54 @@ class LoginActivity : AppCompatActivity() {
         loginButton = findViewById(R.id.login_button)
         binding.loginButton.setOnClickListener() {
             if (username.text.isNotEmpty() && password.text.isNotEmpty()) {
-                database = FirebaseDatabase.getInstance()
-                reference = database.reference.child("Users")
-                reference.orderByChild("username").equalTo(
-                    username.text.toString()).addListenerForSingleValueEvent(object: ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        if (snapshot.exists()) {
-                            for (userdata in snapshot.children) {
-                                val user = userdata.getValue(User::class.java)
-                                if (user != null && user.password == Util.hashPassword(password.text.toString())) {
-                                    Toast.makeText(this@LoginActivity, "Successfully logged in", Toast.LENGTH_SHORT).show()
-                                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                                    intent.putExtra("name", user.name)
-                                    intent.putExtra("username", username.text.toString())
-                                    startActivity(intent)
-                                    finish()
-                                }else {
-                                    Toast.makeText(this@LoginActivity, "Incorrect username or password", Toast.LENGTH_SHORT).show()
-
+                CoroutineScope(IO).launch {
+                    database = FirebaseDatabase.getInstance()
+                    reference = database.reference.child("Users")
+                    reference.orderByChild("username").equalTo(
+                        username.text.toString()
+                    ).addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            if (snapshot.exists()) {
+                                for (userdata in snapshot.children) {
+                                    val user = userdata.getValue(User::class.java)
+                                    if (user != null && user.password == Util.hashPassword(password.text.toString())) {
+                                        Toast.makeText(
+                                            this@LoginActivity,
+                                            "Successfully logged in",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        val intent =
+                                            Intent(this@LoginActivity, MainActivity::class.java)
+                                        intent.putExtra("name", user.name)
+                                        intent.putExtra("username", username.text.toString())
+                                        startActivity(intent)
+                                        finish()
+                                    } else {
+                                        Toast.makeText(
+                                            this@LoginActivity,
+                                            "Incorrect username or password",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
                                 }
+                            } else {
+                                Toast.makeText(
+                                    this@LoginActivity,
+                                    "Incorrect username or password",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
-                        }else {
-                            Toast.makeText(this@LoginActivity, "Incorrect username or password", Toast.LENGTH_SHORT).show()
                         }
-                    }
 
-                    override fun onCancelled(error: DatabaseError) {
-                        Toast.makeText(this@LoginActivity, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
-                    }
-                })
+                        override fun onCancelled(error: DatabaseError) {
+                            Toast.makeText(
+                                this@LoginActivity,
+                                "Error: ${error.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    })
+                }
             }
             else {
                 Toast.makeText(this, "Cannot login please enter username and password", Toast.LENGTH_SHORT).show()
@@ -83,6 +105,12 @@ class LoginActivity : AppCompatActivity() {
         guestButton = findViewById(R.id.guest_button)
         binding.guestButton.setOnClickListener() {
             val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        binding.forgotPassword.setOnClickListener() {
+            val intent = Intent(this, ResetPasswordActivity::class.java)
             startActivity(intent)
             finish()
         }

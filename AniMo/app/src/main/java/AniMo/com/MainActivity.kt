@@ -16,8 +16,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
+        setSupportActionBar(findViewById(R.id.appBar))
         setContentView(binding.root)
         val name = intent.getStringExtra("name")
         val username = intent.getStringExtra("username")
