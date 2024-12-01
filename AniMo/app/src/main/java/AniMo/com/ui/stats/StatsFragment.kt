@@ -28,10 +28,11 @@ class StatsFragment : Fragment() {
 
         val sharedPreferences = requireActivity().getSharedPreferences("user", MODE_PRIVATE)
         val name = sharedPreferences.getString("name", "")
-        val username = sharedPreferences.getString("username", "")
+        val uid = sharedPreferences.getString("uid", "")
 
-        if (username != null && name != null) {
-            statsViewModel.getUserData(username, name)
+        if (uid != null && name != null) {
+            println(uid)
+            statsViewModel.getUserData(uid, name)
             val treats: TextView = binding.treats
             val tasksCompleted: TextView = binding.tasksCompleted
             val timeSpent: TextView = binding.timeSpent

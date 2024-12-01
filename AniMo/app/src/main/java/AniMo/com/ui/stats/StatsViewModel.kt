@@ -21,26 +21,18 @@ class StatsViewModel : ViewModel() {
     private val _user = MutableLiveData<User>().apply {
         value = User()
     }
-    val user:  LiveData<User> = _user
+    val user: LiveData<User> = _user
 
-    fun getUserData(username: String, name: String) {
-        reference.orderByChild("username").equalTo(username).addListenerForSingleValueEvent(object:
-            ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()) {
-                    for (userdata in snapshot.children) {
-                        val user = userdata.getValue(User::class.java)
-                        if (user != null) {
-                            _user.postValue(user)
-                            _text.postValue("${name}'s Pet Statistics")
-                        }
-                    }
+    fun getUserData(uid: String, name: String) {
+        reference.child(uid).get().addOnSuccessListener { snapshot ->
+            if (snapshot.exists()) {
+                val user = snapshot.getValue(User::class.java)
+                if (user != null) {
+                    _user.postValue(user)
+                    _text.postValue("${name}'s Pet Statistics")
                 }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                println("error: ${error.message}")
             }
-        })
+        }
     }
 }

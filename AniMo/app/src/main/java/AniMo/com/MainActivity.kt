@@ -20,12 +20,13 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.appBar))
         setContentView(binding.root)
         val name = intent.getStringExtra("name")
-        val username = intent.getStringExtra("username")
+        val uid = intent.getStringExtra("uid")
+        println(name)
 
         val sharedPreferences = getSharedPreferences("user", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putString("name", name)
-        editor.putString("username", username)
+        editor.putString("uid", uid)
         editor.apply()
 
         val navView: BottomNavigationView = binding.navView

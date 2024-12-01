@@ -45,13 +45,13 @@
             android:textStyle="bold"
             android:textSize="20sp"
             android:layout_margin="10dp"
-            android:text="@string/username_text"/>
+            android:text="@string/email"/>
         <EditText
-            android:id="@+id/username"
+            android:id="@+id/email"
             android:layout_width="match_parent"
-            android:hint=" Enter Username"
+            android:hint=" Enter Email"
             android:layout_margin="10dp"
-            android:inputType="text"
+            android:inputType="textEmailAddress"
             android:layout_height="wrap_content"/>
 
     </LinearLayout>
