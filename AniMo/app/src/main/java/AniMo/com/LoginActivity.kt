@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -26,73 +27,36 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var database: FirebaseDatabase
     private lateinit var reference: DatabaseReference
+    private lateinit var auth: FirebaseAuth
 
-    private lateinit var username: EditText
+    private lateinit var email: EditText
     private lateinit var password: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        database = FirebaseDatabase.getInstance()
+        reference = database.reference.child("Users")
+        auth = FirebaseAuth.getInstance()
+
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        username = findViewById(R.id.username)
+        email = findViewById(R.id.email)
         password = findViewById(R.id.password)
 
         loginButton = findViewById(R.id.login_button)
         binding.loginButton.setOnClickListener() {
-            if (username.text.isNotEmpty() && password.text.isNotEmpty()) {
+            if (email.text.isNotEmpty() && password.text.isNotEmpty()) {
                 CoroutineScope(IO).launch {
-                    database = FirebaseDatabase.getInstance()
-                    reference = database.reference.child("Users")
-                    reference.orderByChild("username").equalTo(
-                        username.text.toString()
-                    ).addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            if (snapshot.exists()) {
-                                for (userdata in snapshot.children) {
-                                    val user = userdata.getValue(User::class.java)
-                                    if (user != null && user.password == Util.hashPassword(password.text.toString())) {
-                                        Toast.makeText(
-                                            this@LoginActivity,
-                                            "Successfully logged in",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        val intent =
-                                            Intent(this@LoginActivity, MainActivity::class.java)
-                                        intent.putExtra("name", user.name)
-                                        intent.putExtra("username", username.text.toString())
-                                        startActivity(intent)
-                                        finish()
-                                    } else {
-                                        Toast.makeText(
-                                            this@LoginActivity,
-                                            "Incorrect username or password",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                }
-                            } else {
-                                Toast.makeText(
-                                    this@LoginActivity,
-                                    "Incorrect username or password",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
-
-                        override fun onCancelled(error: DatabaseError) {
-                            Toast.makeText(
-                                this@LoginActivity,
-                                "Error: ${error.message}",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    })
+                    signIn(email.text.toString(), password.text.toString())
                 }
-            }
-            else {
-                Toast.makeText(this, "Cannot login please enter username and password", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(
+                    this,
+                    "Cannot login please enter username and password",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
         createAccountButton = findViewById(R.id.create_account_button)
@@ -110,9 +74,50 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.forgotPassword.setOnClickListener() {
-            val intent = Intent(this, ResetPasswordActivity::class.java)
-            startActivity(intent)
-            finish()
+            if (email.text.isNotEmpty()) {
+                auth.sendPasswordResetEmail(email.text.toString()).addOnCompleteListener() { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(this, "Email sent", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Invalid email", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } else {
+                Toast.makeText(this, "Enter email first", Toast.LENGTH_SHORT).show()
+            }
         }
+    }
+
+    private fun signIn(email: String, password: String) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    val curUser = auth.currentUser
+                    println(curUser!!.uid)
+                    Toast.makeText(this, "Successfully Logged in", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, MainActivity::class.java)
+                    reference.child(curUser.uid).get().addOnSuccessListener { snapshot ->
+                        if (snapshot.exists()) {
+                            val user = snapshot.getValue(User::class.java)
+                            println(user)
+                            if (user != null) {
+                                println(user.name)
+                                intent.putExtra("name", user.name)
+                                intent.putExtra("uid", user.uid)
+                                startActivity(intent)
+                                finish()
+                            }
+                        }
+                    }
+
+                } else {
+                    Toast.makeText(
+                        this,
+                        "Cannot login please, invalid username or password",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                }
+            }
     }
 }
