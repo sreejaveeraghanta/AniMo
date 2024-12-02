@@ -2,23 +2,18 @@ package AniMo.com.ui.store
 
 import AniMo.com.R
 import AniMo.com.database.Item
-import AniMo.com.database.inventoryStore.ItemDatabaseDao
-import AniMo.com.database.inventoryStore.ItemRepository
-import AniMo.com.database.inventoryStore.StoreDatabase
+import AniMo.com.database.User
 import AniMo.com.databinding.FragmentStoreBinding
-import AniMo.com.ui.inventory.InventoryActivity
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.GridView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
@@ -42,36 +37,34 @@ class StoreFragment : Fragment() {
 
 
     private lateinit var storeViewModel: StoreViewModel
-
-
-//    private lateinit var database: StoreDatabase
-//    private lateinit var databaseDao: ItemDatabaseDao
-//    private lateinit var repository: ItemRepository
-//    private lateinit var viewModelFactory: StoreViewModelFactory
-    private lateinit var arrayList: ArrayList<Item>
+    private lateinit var arrayList: List<Item>
+    private lateinit var database: FirebaseDatabase
+    private lateinit var userReference: DatabaseReference
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-//        val storeViewModel =
-//            ViewModelProvider(this).get(StoreViewModel::class.java)
+
 
         _binding = FragmentStoreBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-//        val textView: TextView = binding.textStore
-//        storeViewModel.text.observe(viewLifecycleOwner) {
-//            textView.text = it
-//        }
 
         // button to go to inventory
         invenButton = root.findViewById(R.id.inven_button)
         invenButton.setOnClickListener() {
             // open inventory page
-            val intent = Intent(activity, InventoryActivity::class.java)
-            startActivity(intent)
+            findNavController().navigate(R.id.action_storeFragment_to_inventoryFragment)
+
+//            val transaction = parentFragmentManager.beginTransaction()
+//            transaction.replace(R.id.fragment_container, fragmentB)
+//            transaction.addToBackStack(null)
+//            transaction.commit()
+
+//            val intent = Intent(activity, InventoryActivity::class.java)
+//            startActivity(intent)
 //            val transact = requireActivity().supportFragmentManager.beginTransaction()
 //            transact.replace(R.id.storepage, InventoryActivity())
 //            transact.commit()
@@ -79,61 +72,85 @@ class StoreFragment : Fragment() {
 
         // get user
         val sharedPreferences = requireActivity().getSharedPreferences("user", MODE_PRIVATE)
-        val username = sharedPreferences.getString("username", "")
-
+        val uid = sharedPreferences.getString("uid", "")
+        database = FirebaseDatabase.getInstance()
+        userReference = database.getReference("Users")
 
         // item list by name: Winter Gift, Underwater Flowing, Cold Aurora Nights, Beach Views, Rock On, Vinyl House, Tokyo Cafe, Flower Blossom's Orchestral, Backyard Lofi, Country Menu
         //get data and
 
 
-        //
-//        database = StoreDatabase.getInstance(requireActivity())
-//        databaseDao = database.itemDatabaseDao
-//        repository = ItemRepository(databaseDao)
-//        viewModelFactory = StoreViewModelFactory(repository)
+
         storeViewModel = ViewModelProvider(this).get(StoreViewModel::class.java)
 
 
         // SET BG ITEMS
         gridViewBG = root.findViewById(R.id.backgroundStore)
-        arrayList = ArrayList()
-        gridAdaptBG = GridAdapter(arrayList, storeViewModel, requireActivity())
+        arrayList = emptyList()
+        gridAdaptBG = GridAdapter(arrayList, storeViewModel, uid, requireActivity())
         gridViewBG.adapter = gridAdaptBG
-        storeViewModel.getBackgroundsData()
-        if (username != null) {
             //compare user owned items to store items
 
-        } else {
-            storeViewModel.bgs.observe(viewLifecycleOwner) {
-                gridAdaptBG.replace(it)
-                gridAdaptBG.notifyDataSetChanged()
+        storeViewModel.bgs.observe(viewLifecycleOwner) {
+            gridAdaptBG.replace(it)
+            gridAdaptBG.notifyDataSetChanged()
+            if (uid != null) {
+                val toRemove = it.toMutableList() // Create a mutable copy of the list
+                // If the user already owns a background, don't display it in the store
+                userReference.child(uid).get().addOnSuccessListener { snapshot ->
+                    if (snapshot.exists()) {
+                        val user = snapshot.getValue(User::class.java)
+                        if (user != null) {
+                            val ownedBgSet = user.backgroundsOwned.toSet()
+                            for (item in it) {
+                                if (ownedBgSet.contains(item.name)) {
+                                    toRemove.remove(item)
+                                }
+                            }
+                        }
+
+                        // Update the adapter with the filtered list
+                        gridAdaptBG.replace(toRemove)
+                        gridAdaptBG.notifyDataSetChanged()
+                    }
+                }
             }
         }
-//        storeViewModel.allItemsLiveData.observe(requireActivity(), Observer { it ->
-//            var array: ArrayList<Item> = ArrayList()
-//            for (item in it) {
-//                if (item.type == "BACKGROUND") {
-//                    array.add(item)
-//                }
-//            }
-//            gridAdaptBG.replace(array)
-//            gridAdaptBG.notifyDataSetChanged()
-//        })
+        storeViewModel.getBackgroundsData()
 
         // SET MUSIC ITEMS
         gridViewMusic = root.findViewById(R.id.musicStore)
-        gridAdaptMusic = GridAdapter(arrayList, storeViewModel, requireActivity())
+        gridAdaptMusic = GridAdapter(arrayList, storeViewModel, uid, requireActivity())
         gridViewMusic.adapter = gridAdaptMusic
-        storeViewModel.getMusicData()
-        if (username != null) {
-            //compare user owned items to store items
+        storeViewModel.music.observe(viewLifecycleOwner) { it ->
+            gridAdaptMusic.replace(it)
+            gridAdaptMusic.notifyDataSetChanged()
 
-        } else {
-            storeViewModel.music.observe(requireActivity(), Observer { it ->
-                gridAdaptMusic.replace(it)
-                gridAdaptMusic.notifyDataSetChanged()
-            })
+            if (uid != null) {
+                val toRemove = it.toMutableList() // Create a mutable copy of the list
+                // If the user already owns a song, don't display it in the store
+                userReference.child(uid).get().addOnSuccessListener { snapshot ->
+                    if (snapshot.exists()) {
+                        val user = snapshot.getValue(User::class.java)
+                        if (user != null) {
+                            val ownedMusicSet = user.musicOwned.toSet()
+                            for (item in it) {
+                                if (ownedMusicSet.contains(item.name)) {
+                                    toRemove.remove(item)
+                                }
+                            }
+                        }
+
+                        // Update the adapter with the filtered list
+                        gridAdaptMusic.replace(toRemove)
+                        gridAdaptMusic.notifyDataSetChanged()
+                    }
+                }
+            }
         }
+
+        storeViewModel.getMusicData()
+
 
 
         return root

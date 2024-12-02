@@ -2,6 +2,7 @@ package AniMo.com.ui.store
 
 import AniMo.com.R
 import AniMo.com.database.Item
+import AniMo.com.ui.FindIcon
 import android.app.Activity
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,9 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 
-class GridAdapter (var itemList: List<Item>, var viewmodel: StoreViewModel, var activity: Activity) : BaseAdapter() {
+class GridAdapter (var itemList: List<Item>, var viewmodel: StoreViewModel, val uid: String?, var activity: Activity) : BaseAdapter() {
+
+    private var finder: FindIcon = FindIcon()
 
     override fun getItem(p0: Int): Any {
         return itemList[p0]
@@ -33,32 +36,36 @@ class GridAdapter (var itemList: List<Item>, var viewmodel: StoreViewModel, var 
 
         val itm = itemList[p0]
         println("ITM: " + itm)
-        var img = 0
-        if (itm.icon == "igloo"){
-            img = R.drawable.igloo
-        } else if (itm.icon == "rockstaricon"){
-            img = R.drawable.rockstaricon
-        } else if (itm.icon == "guitar"){
-            img = R.drawable.guitar
-        } else if (itm.icon == "vinyl"){
-            img = R.drawable.vinyl
-        } else if (itm.icon == "cherryblossom"){
-            img = R.drawable.cherryblossom
-        }
+        val img = finder.search(itm.icon)
+//        if (itm.icon == "igloo"){
+//            img = R.drawable.igloo
+//        } else if (itm.icon == "rockstaricon"){
+//            img = R.drawable.rockstaricon
+//        } else if (itm.icon == "guitar"){
+//            img = R.drawable.guitar
+//        } else if (itm.icon == "vinyl"){
+//            img = R.drawable.vinyl
+//        } else if (itm.icon == "cherryblossom"){
+//            img = R.drawable.cherryblossom
+//        }
 //            ResourcesCompat.getDrawable(tst, null)
 //        getIdentifier(itm.image, "drawable", "AniMo.com.ui.store")
         gridpic.setImageResource(img)
-        name.text = itm.toString()
+        name.text = itm.name
 
         val txt = itm.price.toString() + " \u2764"
         buy.text = txt
         buy.setOnClickListener(){
-            // CHECK IF USER HAS ENOUGH HEARTS
-//            viewmodel.deleteItem(p0)
+            if (uid != null) {
+                // CHECK IF USER HAS ENOUGH HEARTS
+                viewmodel.buyItem(itm, uid)
+            }
+
         }
 
         return v
     }
+
 
     fun replace(newList: List<Item>){
         itemList = newList

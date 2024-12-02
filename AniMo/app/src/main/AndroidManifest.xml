@@ -14,7 +14,7 @@
         android:theme="@style/Theme.AniMo"
         tools:targetApi="31">
         <activity
-            android:name=".ui.inventory.InventoryActivity"
+            android:name=".ui.inventory.InventoryFragment"
             android:exported="false" />
         <activity android:name=".LoginActivity"
             android:exported="true">

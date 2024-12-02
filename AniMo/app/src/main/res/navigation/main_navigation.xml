@@ -27,6 +27,21 @@
         android:id="@+id/navigation_store"
         android:name="AniMo.com.ui.store.StoreFragment"
         android:label="@string/title_store"
-        tools:layout="@layout/fragment_store" />
+        tools:layout="@layout/fragment_store" >
+<!--        navigate between store and inventory -->
+        <action
+            android:id="@+id/action_storeFragment_to_inventoryFragment"
+            app:destination="@id/navigation_inventory" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_inventory"
+        android:name="AniMo.com.ui.inventory.InventoryFragment"
+        android:label="Inventory"
+        tools:layout="@layout/fragment_inventory">
+<!--        <action-->
+<!--            android:id="@+id/action_inventoryFragment_to_storeFragment"-->
+<!--            app:destination="@id/navigation_store" />-->
+    </fragment>
 
 </navigation>
