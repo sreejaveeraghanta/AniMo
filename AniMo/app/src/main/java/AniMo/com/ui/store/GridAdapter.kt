@@ -1,16 +1,14 @@
 package AniMo.com.ui.store
 
 import AniMo.com.R
-import AniMo.com.database.inventoryStore.Item
+import AniMo.com.database.Item
 import android.app.Activity
-import android.net.Uri
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.res.ResourcesCompat
 
 class GridAdapter (var itemList: List<Item>, var viewmodel: StoreViewModel, var activity: Activity) : BaseAdapter() {
 
@@ -34,27 +32,29 @@ class GridAdapter (var itemList: List<Item>, var viewmodel: StoreViewModel, var 
 
 
         val itm = itemList[p0]
+        println("ITM: " + itm)
         var img = 0
-        if (itm.image == "igloo"){
+        if (itm.icon == "igloo"){
             img = R.drawable.igloo
-        } else if (itm.image == "rockstar"){
-            img = R.drawable.rockstar
-        } else if (itm.image == "guitar"){
+        } else if (itm.icon == "rockstaricon"){
+            img = R.drawable.rockstaricon
+        } else if (itm.icon == "guitar"){
             img = R.drawable.guitar
-        } else if (itm.image == "vinyl"){
+        } else if (itm.icon == "vinyl"){
             img = R.drawable.vinyl
-        } else if (itm.image == "cherryblossom"){
+        } else if (itm.icon == "cherryblossom"){
             img = R.drawable.cherryblossom
         }
 //            ResourcesCompat.getDrawable(tst, null)
 //        getIdentifier(itm.image, "drawable", "AniMo.com.ui.store")
         gridpic.setImageResource(img)
-        name.text = itm.name
+        name.text = itm.toString()
+
         val txt = itm.price.toString() + " \u2764"
         buy.text = txt
         buy.setOnClickListener(){
             // CHECK IF USER HAS ENOUGH HEARTS
-            viewmodel.deleteItem(p0)
+//            viewmodel.deleteItem(p0)
         }
 
         return v

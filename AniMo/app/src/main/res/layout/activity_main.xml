@@ -14,7 +14,39 @@
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        android:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="10dp"
+            android:paddingHorizontal="5dp">
+
+            <ImageView
+                android:id="@+id/heartimg"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/heart"
+                android:elevation="3dp"
+                android:layout_toStartOf="@+id/heartnumtextview"/>
+
+            <TextView
+                android:id="@+id/heartnumtextview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1000"
+                android:layout_gravity="center_vertical"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:background="@drawable/rounded_rectangle"
+                android:paddingVertical="10dp"
+                android:paddingLeft="65dp"
+                android:paddingRight="20dp"
+                android:layout_marginLeft="-55dp"/>
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
 
     <!-- Navigation Host Fragment -->
     <fragment

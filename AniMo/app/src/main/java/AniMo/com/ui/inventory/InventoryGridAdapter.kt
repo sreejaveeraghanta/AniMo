@@ -2,7 +2,6 @@ package AniMo.com.ui.inventory
 
 import AniMo.com.R
 import AniMo.com.database.inventoryStore.Item
-import AniMo.com.ui.store.StoreViewModel
 import android.app.Activity
 import android.view.View
 import android.view.ViewGroup
@@ -37,7 +36,7 @@ class InventoryGridAdapter (var itemList: List<Item>, var viewmodel: InventoryVi
         if (itm.image == "igloo"){
             img = R.drawable.igloo
         } else if (itm.image == "rockstar"){
-            img = R.drawable.rockstar
+            img = R.drawable.rockstaricon
         } else if (itm.image == "guitar"){
             img = R.drawable.guitar
         } else if (itm.image == "vinyl"){

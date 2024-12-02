@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)
     implementation(libs.firebase.auth)
+    implementation("com.google.firebase:firebase-auth-ktx:23.1.0")
     kapt(libs.androidx.room.compiler)
     implementation (libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.firebase.database)
