@@ -45,10 +45,9 @@ class SignupActivity : AppCompatActivity() {
 
             if (name.text.isNotEmpty() && username.text.isNotEmpty() && password.text.isNotEmpty() && email.text.isNotEmpty()) {
                 val nameValue = name.text.toString()
-                val usernameValue = username.text.toString()
                 val passwordValue = password.text.toString()
                 val emailAddress = email.text.toString()
-                authenticateUser(emailAddress, passwordValue, nameValue, usernameValue)
+                authenticateUser(emailAddress, passwordValue, nameValue)
 
             } else {
                 Toast.makeText(this, "Please populate all fields", Toast.LENGTH_SHORT).show()
@@ -62,7 +61,7 @@ class SignupActivity : AppCompatActivity() {
         }
     }
 
-    private fun authenticateUser(email: String, password: String, name: String, username: String) {
+    private fun authenticateUser(email: String, password: String, name: String) {
         CoroutineScope(IO).launch {
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this@SignupActivity) { task ->

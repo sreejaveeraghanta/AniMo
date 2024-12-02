@@ -1,5 +1,6 @@
 package AniMo.com.ui.friends
 
+import AniMo.com.Util
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View

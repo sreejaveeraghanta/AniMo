@@ -5,7 +5,7 @@ data class User(
     val email: String = "",
     val uid: String = "",
     val hearts: Int = 0,
-    val treats: Int = 0,
+    val friends: Int = 0,
     val tasksCompleted: Int = 0,
     val visitors: Int = 0,
     val visited: Int = 0,

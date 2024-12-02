@@ -9,10 +9,12 @@ import androidx.navigation.ui.setupWithNavController
 import AniMo.com.databinding.ActivityMainBinding
 import AniMo.com.ui.tasks.NewTaskActivity
 import android.content.Intent
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +46,13 @@ class MainActivity : AppCompatActivity() {
         )
 
         navView.setupWithNavController(navController)
+
+        binding.logout.setOnClickListener {
+            auth = FirebaseAuth.getInstance()
+            auth.signOut()
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
 
         binding.fab.setOnClickListener {
             val intent = Intent(this, NewTaskActivity::class.java)

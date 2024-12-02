@@ -33,14 +33,14 @@ class StatsFragment : Fragment() {
         if (uid != null && name != null) {
             println(uid)
             statsViewModel.getUserData(uid, name)
-            val treats: TextView = binding.treats
+            val friends: TextView = binding.friends
             val tasksCompleted: TextView = binding.tasksCompleted
             val timeSpent: TextView = binding.timeSpent
             val visitors: TextView = binding.visitors
             val visited: TextView = binding.visited
 
             statsViewModel.user.observe(viewLifecycleOwner) {
-                treats.text = it.treats.toString()
+                friends.text = it.friends.toString()
                 tasksCompleted.text = it.tasksCompleted.toString()
                 timeSpent.text = it.timeSpent.toString()
                 visitors.text = it.visitors.toString()

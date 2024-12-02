@@ -33,11 +33,32 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var password: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
         database = FirebaseDatabase.getInstance()
         reference = database.reference.child("Users")
         auth = FirebaseAuth.getInstance()
+        super.onCreate(savedInstanceState)
+        val cur_user = auth.currentUser
+        if (cur_user != null) {
+            Toast.makeText(this, "Logging in, please wait", Toast.LENGTH_LONG).show()
+            reference.child(cur_user.uid).get().addOnSuccessListener { snapshot ->
+                if (snapshot.exists()) {
+                    val user = snapshot.getValue(User::class.java)
+                    println(user)
+                    if (user != null) {
+                        println(user.name)
+                        val intent = Intent(this, MainActivity::class.java)
+                        intent.putExtra("name", user.name)
+                        intent.putExtra("uid", user.uid)
+                        startActivity(intent)
+                        finish()
+                    }
+                }
+            }
+        }
+        else {
+            Toast.makeText(this, "Please Log in", Toast.LENGTH_SHORT).show()
+        }
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
