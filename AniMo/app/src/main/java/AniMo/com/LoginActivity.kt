@@ -57,7 +57,7 @@ class LoginActivity : AppCompatActivity() {
             }
         }
         else {
-            Toast.makeText(this, "Please Log in", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Cannot Log in", Toast.LENGTH_SHORT).show()
         }
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
