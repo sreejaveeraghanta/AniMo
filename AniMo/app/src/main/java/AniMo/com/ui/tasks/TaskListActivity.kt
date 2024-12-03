@@ -1,63 +1,78 @@
 package AniMo.com.ui.tasks
 
-
 import AniMo.com.R
-import AniMo.com.ui.home.HomeFragment
+import AniMo.com.database.User
 import AniMo.com.ui.tasks.Task
-import android.content.Context
+import AniMo.com.ui.home.HomeFragment
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 
 class TaskListActivity : AppCompatActivity() {
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var addTaskButton: Button
-    private lateinit var backToHomeButton: Button
-    private lateinit var historyButton: Button
-    private val taskList = mutableListOf<Task>()
+    private lateinit var taskRecyclerView: RecyclerView
+    private lateinit var taskAdapter: TaskAdapter
+    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var database: FirebaseDatabase
+    private var taskList: MutableList<Task> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_list)
 
-        recyclerView = findViewById(R.id.task_recycler_view)
-        addTaskButton = findViewById(R.id.add_task_button)
-        backToHomeButton = findViewById(R.id.back_to_home_button)
-        historyButton = findViewById(R.id.history_button)
+        taskRecyclerView = findViewById(R.id.task_recycler_view)  // RecyclerView to display tasks
+        firebaseAuth = FirebaseAuth.getInstance()
+        database = FirebaseDatabase.getInstance()
 
+        // Initialize RecyclerView with LinearLayoutManager
+        taskRecyclerView.layoutManager = LinearLayoutManager(this)
 
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        loadTasks()
-        val adapter = TaskAdapter(taskList)
-        recyclerView.adapter = adapter
+        // Initialize the adapter
+        taskAdapter = TaskAdapter(taskList)
+        taskRecyclerView.adapter = taskAdapter
 
+        loadTasksFromFirebase()
 
-        addTaskButton.setOnClickListener {
+        // Handle button clicks
+        findViewById<View>(R.id.add_task_button).setOnClickListener {
+            // Navigate to the AddTaskActivity to add a new task
             val intent = Intent(this, NewTaskActivity::class.java)
             startActivity(intent)
         }
 
-        backToHomeButton.setOnClickListener {
+        findViewById<View>(R.id.back_to_home_button).setOnClickListener {
+            // Navigate back to the home screen (e.g., HomeActivity)
             val intent = Intent(this, HomeFragment::class.java)
             startActivity(intent)
+            finish() // Optional, if you want to close the current activity
         }
 
+        findViewById<View>(R.id.history_button).setOnClickListener {
+            // Placeholder for history button (you can implement history functionality here later)
+            Toast.makeText(this, "History functionality not implemented yet.", Toast.LENGTH_SHORT).show()
+        }
     }
 
-    private fun loadTasks() {
-        val sharedPreferences = getSharedPreferences("tasks", Context.MODE_PRIVATE)
-        val json = sharedPreferences.getString("task_list", null)
-        val type = object : TypeToken<MutableList<Task>>() {}.type
-        val gson = Gson()
-        val savedTasks: MutableList<Task>? = gson.fromJson(json, type)
-        if (savedTasks != null) {
-            taskList.addAll(savedTasks)
+    private fun loadTasksFromFirebase() {
+        val userId = firebaseAuth.currentUser?.uid ?: return
+        val userRef = database.getReference("users/$userId")
+
+        userRef.get().addOnSuccessListener { snapshot ->
+            val currentUser = snapshot.getValue(User::class.java)
+            if (currentUser != null) {
+                // Clear and add tasks to the list
+                taskList.clear()
+                taskList.addAll(currentUser.tasks)
+                taskAdapter.notifyDataSetChanged()  // Notify adapter about data change
+            }
+        }.addOnFailureListener {
+            Toast.makeText(this, "Failed to load tasks.", Toast.LENGTH_SHORT).show()
         }
     }
 }

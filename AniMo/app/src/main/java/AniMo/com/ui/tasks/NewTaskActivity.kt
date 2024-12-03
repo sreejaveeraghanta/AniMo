@@ -5,6 +5,8 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import AniMo.com.database.User
+import android.util.Log
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
@@ -13,6 +15,8 @@ import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.util.Calendar
@@ -31,6 +35,9 @@ class NewTaskActivity : AppCompatActivity() {
     private var selectedDate: String = ""
     private var selectedTime: String = ""
 
+    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var database: FirebaseDatabase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_task)
@@ -44,6 +51,9 @@ class NewTaskActivity : AppCompatActivity() {
         durationInput = findViewById(R.id.task_duration)
         saveButton = findViewById(R.id.save_task_button)
         cancelButton = findViewById(R.id.cancel_task_button)
+
+        firebaseAuth = FirebaseAuth.getInstance()
+        database = FirebaseDatabase.getInstance()
 
         val calendar = Calendar.getInstance()
 
@@ -101,9 +111,11 @@ class NewTaskActivity : AppCompatActivity() {
                     Toast.makeText(this, "Please enter a valid duration!", Toast.LENGTH_SHORT).show()
                 } else {
                     val newTask = Task(taskName, priority, selectedDate, selectedTime, duration)
-                    saveTask(newTask)
-                    Toast.makeText(this, "Task saved!", Toast.LENGTH_SHORT).show()
 
+                    // Save the task to Firebase under the User model
+                    saveTaskToFirebase(newTask)
+
+                    Toast.makeText(this, "Task saved!", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, TaskListActivity::class.java)
                     startActivity(intent)
                 }
@@ -117,15 +129,52 @@ class NewTaskActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveTask(task: Task) {
-        val sharedPreferences = getSharedPreferences("tasks", MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        val gson = Gson()
-        val json = sharedPreferences.getString("task_list", null)
-        val type = object : TypeToken<MutableList<Task>>() {}.type
-        val taskList: MutableList<Task> = gson.fromJson(json, type) ?: mutableListOf()
-        taskList.add(task)
-        editor.putString("task_list", gson.toJson(taskList))
-        editor.apply()
+    private fun saveTaskToFirebase(task: Task) {
+        // Get the user ID (from Firebase Authentication)
+        val userId = firebaseAuth.currentUser?.uid ?: return
+
+        // Get a reference to the user's data in the database
+        val userRef = database.getReference("users/$userId")
+
+        // Get the current user data (User model)
+        userRef.get().addOnSuccessListener { snapshot ->
+            // If snapshot is null or empty, create a new default User
+            val currentUser = snapshot.getValue(User::class.java) ?: User(
+                name = "",
+                email = "",
+                uid = userId,
+                hearts = 0,
+                friends = 0,
+                tasksCompleted = 0,
+                visitors = 0,
+                visited = 0,
+                timeSpent = 0.0,
+                backgroundsOwned = listOf(),
+                musicOwned = listOf(),
+                backgroundEquipped = "",
+                tasks = mutableListOf() // Initialize tasks as an empty list if not found
+            )
+
+            // Now that we have the current user (or a default one), add the new task
+            currentUser.tasks.add(task)
+
+            // Save the updated user data with the new task
+            userRef.setValue(currentUser).addOnSuccessListener {
+                Log.d("FirebaseDebug", "Task saved successfully.")
+                Toast.makeText(this, "Task saved successfully!", Toast.LENGTH_SHORT).show()
+            }.addOnFailureListener { error ->
+                Log.e("FirebaseDebug", "Failed to save task: ${error.message}")
+                Toast.makeText(this, "Failed to save task. Try again.", Toast.LENGTH_SHORT).show()
+            }
+        }.addOnFailureListener { error ->
+            // Log and handle the failure for retrieving user data
+            Log.e("FirebaseDebug", "Failed to retrieve user data: ${error.message}")
+            Toast.makeText(this, "Failed to retrieve user data.", Toast.LENGTH_SHORT).show()
+        }
     }
+
+
 }
+
+
+

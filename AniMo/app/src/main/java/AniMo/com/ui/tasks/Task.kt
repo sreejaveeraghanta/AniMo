@@ -5,5 +5,6 @@ data class Task(
     val priority: Int,
     val date: String,
     val time: String,
-    val duration: Int // Duration in minutes
+    val duration: Int,
+    val isCompleted: Boolean = false
 )
