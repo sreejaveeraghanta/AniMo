@@ -12,6 +12,10 @@ import android.os.Looper
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SpriteAnimationView @JvmOverloads constructor(
     context: Context,
@@ -26,6 +30,7 @@ class SpriteAnimationView @JvmOverloads constructor(
     private var frameCount: Int = 0
     private var frameDuration: Long = 50L
     private var currentAnimationType: String? = null
+    private var pingPongMode: Boolean = false
     private var isReversed = false // To track ascending or descending order
     private val paint = Paint()
 
@@ -33,18 +38,17 @@ class SpriteAnimationView @JvmOverloads constructor(
     private val animationRunnable = object : Runnable {
         override fun run() {
             if (frameCount > 0) {
-                // Update current frame based on direction
-                currentFrame = if (isReversed) {
-                    currentFrame - 1
+                // Update frame index based on ping-pong mode
+                currentFrame = if (pingPongMode) {
+                    if (isReversed) currentFrame - 1 else currentFrame + 1
                 } else {
-                    currentFrame + 1
+                    (currentFrame + 1) % frameCount
                 }
 
-                // Reverse direction at the ends
-                if (currentFrame == 0) {
-                    isReversed = false
-                } else if (currentFrame == frameCount - 1) {
-                    isReversed = true
+                // Reverse direction at edges in ping-pong mode
+                if (pingPongMode) {
+                    if (currentFrame == 0) isReversed = false
+                    else if (currentFrame == frameCount - 1) isReversed = true
                 }
 
                 invalidate() // Redraw the view
@@ -80,6 +84,7 @@ class SpriteAnimationView @JvmOverloads constructor(
     }
 
     fun startAnimation() {
+        stopAnimation()
         handler.post(animationRunnable)
     }
 
@@ -96,29 +101,38 @@ class SpriteAnimationView @JvmOverloads constructor(
      * @param frameDuration Duration of each frame in milliseconds (optional)
      * @param pingPongMode Whether the animation should play in ping-pong mode
      */
-    private fun setSpriteSheet(
+    private fun loadSpriteSheetAsync(
         resourceId: Int,
         rows: Int,
         columns: Int,
         totalFrames: Int,
-        frameDuration: Long = 50L,
-        pingPongMode: Boolean = false
+        frameDuration: Long,
+        pingPongMode: Boolean
     ) {
-        spriteSheet = BitmapFactory.decodeResource(resources, resourceId, BitmapFactory.Options().apply {
-            inSampleSize = 3
-        })
-        frameWidth = spriteSheet?.width?.div(columns) ?: 0
-        frameHeight = spriteSheet?.height?.div(rows) ?: 0
-        this.frameCount = totalFrames
-        this.frameDuration = frameDuration
-        this.isReversed = false // Reset direction for ping-pong
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val options = BitmapFactory.Options().apply {
+                    inPreferredConfig = Bitmap.Config.RGB_565
+                    inSampleSize = 3
+                }
+                val bitmap = BitmapFactory.decodeResource(resources, resourceId, options)
 
-        // If ping-pong mode, set current frame to 0
-        if (pingPongMode) {
-            currentFrame = 0
+                withContext(Dispatchers.Main) {
+                    spriteSheet = bitmap
+                    frameWidth = bitmap.width / columns
+                    frameHeight = bitmap.height / rows
+                    this@SpriteAnimationView.frameCount = totalFrames
+                    this@SpriteAnimationView.frameDuration = frameDuration
+                    this@SpriteAnimationView.pingPongMode = pingPongMode
+                    this@SpriteAnimationView.isReversed = false // Reset direction
+                    currentFrame = 0
+                    startAnimation()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                // Handle loading error, if necessary
+            }
         }
-
-        invalidate()
     }
 
     /**
@@ -127,21 +141,25 @@ class SpriteAnimationView @JvmOverloads constructor(
     fun playAnimation(animationType: String) {
         if (currentAnimationType == animationType) return // Avoid restarting the same animation
 
+        // Stop the current animation before starting a new one
+        stopAnimation()
+
         currentAnimationType = animationType
         when (animationType) {
-            "happy_animation" -> setSpriteSheet(
+            "happy_animation" -> loadSpriteSheetAsync(
                 resourceId = R.drawable.sheet_duck_happy,
                 rows = 5,
                 columns = 8,
                 totalFrames = 40,
-                frameDuration = 50L
+                frameDuration = 1000L / 60,
+                pingPongMode = false
             )
-            "idle_animation" -> setSpriteSheet(
+            "idle_animation" -> loadSpriteSheetAsync(
                 resourceId = R.drawable.sheet_duck_idle,
                 rows = 4,
                 columns = 7,
                 totalFrames = 26,
-                frameDuration = 100L,
+                frameDuration = 1000L / 60,
                 pingPongMode = true
             )
             else -> throw IllegalArgumentException("Unknown animation type: $animationType")

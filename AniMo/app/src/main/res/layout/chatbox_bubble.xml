@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="600dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/chatbox_background"
+    android:padding="16dp"
+    android:elevation="4dp">
+
+    <!-- Interaction Options -->
+    <Button
+        android:id="@+id/chatbox_option_feel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="4dp"
+        android:text="How do you feel?"
+        android:background="@drawable/chatbox_option_background"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="4dp" />
+
+    <Button
+        android:id="@+id/chatbox_option_feed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="4dp"
+        android:text="Feed"
+        android:background="@drawable/chatbox_option_background"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="4dp" />
+
+    <Button
+        android:id="@+id/chatbox_option_play"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="4dp"
+        android:text="Play"
+        android:background="@drawable/chatbox_option_background"
+        android:textColor="@android:color/white" />
+
+</LinearLayout>
