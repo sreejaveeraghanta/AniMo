@@ -42,8 +42,9 @@ class historyTask : AppCompatActivity() {
         // Set up navigation buttons
         findViewById<View>(R.id.history_recycler_view).setOnClickListener {
             // Navigate back to the main task page
-
-            finish() // Optional: close this activity
+        }
+        findViewById<View>(R.id.back_to_task_list_button).setOnClickListener {
+            finish()
         }
     }
 

@@ -130,48 +130,55 @@ class NewTaskActivity : AppCompatActivity() {
     }
 
     private fun saveTaskToFirebase(task: Task) {
-        // Get the user ID (from Firebase Authentication)
-        val userId = firebaseAuth.currentUser?.uid ?: return
+        // Check if the user is logged in
+        val userId = firebaseAuth.currentUser?.uid
+        if (userId == null) {
+            Log.e("FirebaseDebug", "User is not logged in.")
+            Toast.makeText(this, "Please log in first.", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         // Get a reference to the user's data in the database
-        val userRef = database.getReference("users/$userId")
+        val userRef = database.getReference("Users/$userId")
 
         // Get the current user data (User model)
         userRef.get().addOnSuccessListener { snapshot ->
-            // If snapshot is null or empty, create a new default User
-            val currentUser = snapshot.getValue(User::class.java) ?: User(
-                name = "",
-                email = "",
-                uid = userId,
-                hearts = 0,
-                friends = 0,
-                tasksCompleted = 0,
-                visitors = 0,
-                visited = 0,
-                timeSpent = 0.0,
-                backgroundsOwned = listOf(),
-                musicOwned = listOf(),
-                backgroundEquipped = "",
-                tasks = mutableListOf() // Initialize tasks as an empty list if not found
-            )
+            if (snapshot.exists()) {
+                // Retrieve the current user data
+                val currentUser = snapshot.getValue(User::class.java) ?: User(
+                    name = "",
+                    email = "",
+                    uid = userId,
+                    hearts = 0,
+                    friends = 0,
+                    tasksCompleted = 0,
+                    visitors = 0,
+                    visited = 0,
+                    timeSpent = 0.0,
+                    backgroundsOwned = listOf(),
+                    musicOwned = listOf(),
+                    backgroundEquipped = "",
+                    tasks = mutableListOf() // Initialize tasks as an empty list if not found
+                )
 
-            // Now that we have the current user (or a default one), add the new task
-            currentUser.tasks.add(task)
+                // Append the new task to the current tasks list
+                currentUser.tasks.add(task)
 
-            // Save the updated user data with the new task
-            userRef.setValue(currentUser).addOnSuccessListener {
-                Log.d("FirebaseDebug", "Task saved successfully.")
-                Toast.makeText(this, "Task saved successfully!", Toast.LENGTH_SHORT).show()
-            }.addOnFailureListener { error ->
-                Log.e("FirebaseDebug", "Failed to save task: ${error.message}")
-                Toast.makeText(this, "Failed to save task. Try again.", Toast.LENGTH_SHORT).show()
-            }
+                // Update the task list in Firebase without overwriting other user data
+                userRef.child("tasks").setValue(currentUser.tasks).addOnSuccessListener {
+                    Log.d("FirebaseDebug", "Tasks list updated successfully.")
+                    Toast.makeText(this, "Task saved successfully!", Toast.LENGTH_SHORT).show()
+                }.addOnFailureListener { error ->
+                    Log.e("FirebaseDebug", "Failed to update tasks list: ${error.message}")
+                    Toast.makeText(this, "Failed to save task. Try again.", Toast.LENGTH_SHORT).show()
+                }
 
-            // Save the updated task list directly under the "tasks" node in the user data
-            userRef.child("tasks").setValue(currentUser.tasks).addOnSuccessListener {
-                Log.d("FirebaseDebug", "Tasks list saved successfully.")
-            }.addOnFailureListener { error ->
-                Log.e("FirebaseDebug", "Failed to save tasks list: ${error.message}")
+                // Commented out this line to prevent overwriting the entire user data
+                // userRef.child(currentUser).setValue(currentUser) // This line is now commented out
+            } else {
+                // If snapshot does not exist, handle this case (e.g., create a new user)
+                Log.e("FirebaseDebug", "User data not found.")
+                Toast.makeText(this, "User data not found.", Toast.LENGTH_SHORT).show()
             }
         }.addOnFailureListener { error ->
             // Log and handle the failure for retrieving user data
@@ -182,6 +189,6 @@ class NewTaskActivity : AppCompatActivity() {
 
 
 
-}
 
+}
 
