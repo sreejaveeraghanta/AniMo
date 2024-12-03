@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import AniMo.com.databinding.FragmentHomeBinding
 
-import AniMo.com.animations.PetAnimator
+//import AniMo.com.animations.PetAnimator
 import AniMo.com.animations.SpriteAnimationView
 import AniMo.com.ui.inventory.InventoryViewModel
 import android.view.Gravity

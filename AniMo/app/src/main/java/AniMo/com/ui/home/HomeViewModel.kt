@@ -2,7 +2,7 @@ package AniMo.com.ui.home
 
 import AniMo.com.R
 
-import AniMo.com.animations.PetAnimator
+//import AniMo.com.animations.PetAnimator
 import AniMo.com.database.Item
 import AniMo.com.ui.FindIcon
 import AniMo.com.ui.inventory.InventoryViewModel
