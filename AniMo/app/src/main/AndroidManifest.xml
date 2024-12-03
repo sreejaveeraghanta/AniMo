@@ -31,7 +31,7 @@
         </activity>
         <activity android:name=".ui.tasks.NewTaskActivity"/>
         <activity android:name=".ui.tasks.TaskListActivity"/>
-        <activity android:name=".ui.tasks.historyActivity"/>
+        <activity android:name=".ui.tasks.historyTask"/>
     </application>
 
 </manifest>

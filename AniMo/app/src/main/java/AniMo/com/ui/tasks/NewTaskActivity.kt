@@ -166,6 +166,13 @@ class NewTaskActivity : AppCompatActivity() {
                 Log.e("FirebaseDebug", "Failed to save task: ${error.message}")
                 Toast.makeText(this, "Failed to save task. Try again.", Toast.LENGTH_SHORT).show()
             }
+
+            // Save the updated task list directly under the "tasks" node in the user data
+            userRef.child("tasks").setValue(currentUser.tasks).addOnSuccessListener {
+                Log.d("FirebaseDebug", "Tasks list saved successfully.")
+            }.addOnFailureListener { error ->
+                Log.e("FirebaseDebug", "Failed to save tasks list: ${error.message}")
+            }
         }.addOnFailureListener { error ->
             // Log and handle the failure for retrieving user data
             Log.e("FirebaseDebug", "Failed to retrieve user data: ${error.message}")
@@ -174,7 +181,7 @@ class NewTaskActivity : AppCompatActivity() {
     }
 
 
-}
 
+}
 
 
