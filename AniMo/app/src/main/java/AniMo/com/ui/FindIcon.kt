@@ -13,6 +13,8 @@ class FindIcon {
     private val BGiconNames = arrayOf("iconaurora", "iconigloo", "iconaurora2", "iconbeach", "iconwave")
     private val BGdrawables = arrayOf(R.drawable.iconaurora, R.drawable.iconigloo, R.drawable.iconaurora2,
         R.drawable.iconbeach, R.drawable.iconwave)
+    private val BGresources = arrayOf(R.drawable.bgaurora, R.drawable.wintergiftlights, R.drawable.bgaurora2,
+        R.drawable.bgbeach, R.drawable.bgunderwater)
 
 
     fun search(str: String) : Int {
@@ -60,4 +62,13 @@ class FindIcon {
         return type
     }
 
+    fun findBGimg(iconName: String) : Int{
+        for (item in BGiconNames.indices) {
+            if (BGiconNames[item] == iconName) {
+                return BGresources[item]
+            }
+        }
+
+        return R.drawable.wintergiftlights
+    }
 }

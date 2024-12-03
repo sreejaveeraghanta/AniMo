@@ -10,13 +10,15 @@ import androidx.lifecycle.ViewModelProvider
 import AniMo.com.databinding.FragmentHomeBinding
 import AniMo.com.animations.PetAnimator
 import AniMo.com.animations.SpriteAnimationView
+import AniMo.com.ui.inventory.InventoryViewModel
 import android.widget.PopupMenu
+import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private lateinit var homeViewModel: HomeViewModel
+    lateinit var homeViewModel: HomeViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,13 +27,21 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root = binding.root
 
+        // init viewmodel factory
+        val sharedPreferences = requireActivity().getSharedPreferences("user", MODE_PRIVATE)
+        val uid = sharedPreferences.getString("uid", "")
+        val viewModelFactory = HomeViewModel.HomeViewModelFactory(uid)
+
+
         // Initialize HomeViewModel
-        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+        homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
 
         // Observe background resource ID and set the background image
         homeViewModel.backgroundResId.observe(viewLifecycleOwner) { resourceId ->
             binding.roomBackground.setImageResource(resourceId)
         }
+        homeViewModel.getEquippedBackground()
+
 
         // Observe carpet resource ID and set the background image
         homeViewModel.carpetResId.observe(viewLifecycleOwner) { resourceId ->

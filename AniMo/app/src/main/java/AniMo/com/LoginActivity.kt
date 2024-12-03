@@ -43,6 +43,7 @@ class LoginActivity : AppCompatActivity() {
             Toast.makeText(this, "Logging in, please wait", Toast.LENGTH_LONG).show()
             reference.child(cur_user.uid).get().addOnSuccessListener { snapshot ->
                 if (snapshot.exists()) {
+                    println("Raw data: ${snapshot.value}")
                     val user = snapshot.getValue(User::class.java)
                     println(user)
                     if (user != null) {

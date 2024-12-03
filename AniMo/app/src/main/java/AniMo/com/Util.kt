@@ -40,4 +40,25 @@ object Util {
 
         }
     }
+
+    fun getHearts(uid: String, callback: (Int) -> Unit) {
+
+        var totalHearts = 0
+
+        reference.child(uid).get().addOnSuccessListener { snapshot ->
+            if (snapshot.exists()) {
+                val user = snapshot.getValue(User::class.java)
+                if (user != null) {
+                    totalHearts = user.hearts
+
+                }
+            }
+            callback(totalHearts)
+
+        }
+
+    }
+
+
+
 }

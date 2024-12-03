@@ -1,6 +1,7 @@
 package AniMo.com.ui.store
 
 import AniMo.com.R
+import AniMo.com.Util
 import AniMo.com.database.Item
 import AniMo.com.ui.FindIcon
 import android.app.Activity
@@ -37,19 +38,6 @@ class GridAdapter (var itemList: List<Item>, var viewmodel: StoreViewModel, val 
         val itm = itemList[p0]
         println("ITM: " + itm)
         val img = finder.search(itm.icon)
-//        if (itm.icon == "igloo"){
-//            img = R.drawable.igloo
-//        } else if (itm.icon == "rockstaricon"){
-//            img = R.drawable.rockstaricon
-//        } else if (itm.icon == "guitar"){
-//            img = R.drawable.guitar
-//        } else if (itm.icon == "vinyl"){
-//            img = R.drawable.vinyl
-//        } else if (itm.icon == "cherryblossom"){
-//            img = R.drawable.cherryblossom
-//        }
-//            ResourcesCompat.getDrawable(tst, null)
-//        getIdentifier(itm.image, "drawable", "AniMo.com.ui.store")
         gridpic.setImageResource(img)
         name.text = itm.name
 
@@ -57,8 +45,27 @@ class GridAdapter (var itemList: List<Item>, var viewmodel: StoreViewModel, val 
         buy.text = txt
         buy.setOnClickListener(){
             if (uid != null) {
+                println("not NULL")
                 // CHECK IF USER HAS ENOUGH HEARTS
-                viewmodel.buyItem(itm, uid)
+                Util.getHearts(uid) { hearts ->
+
+                    if ( hearts >= itm.price) {
+                        println("ENOUGH")
+                        viewmodel.buyItem(itm, uid)
+                        val txt = "bought"
+                        buy.text = txt
+                        buy.isEnabled = false
+
+                        val cost = -itm.price
+
+                        Util.updateStats(uid, cost, 0, 0.0, 0, 0, 0)
+
+
+                    }
+                }
+
+
+
             }
 
         }

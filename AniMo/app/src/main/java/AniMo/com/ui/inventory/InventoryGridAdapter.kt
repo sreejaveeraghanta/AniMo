@@ -10,8 +10,9 @@ import android.widget.BaseAdapter
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.LifecycleOwner
 
-class InventoryGridAdapter (var itemList: List<Item>, var viewmodel: InventoryViewModel, var activity: Activity) : BaseAdapter() {
+class InventoryGridAdapter (var itemList: List<Item>, val viewmodel: InventoryViewModel, var activity: Activity, var lifecycleOwner: LifecycleOwner) : BaseAdapter() {
 
     private var finder: FindIcon = FindIcon()
 
@@ -28,7 +29,7 @@ class InventoryGridAdapter (var itemList: List<Item>, var viewmodel: InventoryVi
     }
 
     override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
-        val v: View = View.inflate(activity, R.layout.store_item, null)
+        val v: View = View.inflate(activity, R.layout.inventory_item, null)
         val gridpic = v.findViewById<ImageView>(R.id.itemImageView)
         val name = v.findViewById<TextView>(R.id.itemNameTextView)
         val buy = v.findViewById<Button>(R.id.itemEquipButton)
@@ -39,25 +40,26 @@ class InventoryGridAdapter (var itemList: List<Item>, var viewmodel: InventoryVi
 
         gridpic.setImageResource(img)
         name.text = itm.name
-        var txt = ""
-        var equip = false
-//        if (itm.equipped == 1){
-//            txt = "Equip"
-//        } else {
-//            txt = "Unequip"
-//            equip = true
-//        }
-        buy.text = txt
-        buy.setOnClickListener(){
-            // CHECK IF IN USE
-            if (equip){
-                val t = "Unequip"
-                buy.text = t
-                // unequip
+        viewmodel.checkIfItemEquipped(itm)
+        viewmodel.isEquippedLiveData.observe(lifecycleOwner) { isEquipped ->
+            if (isEquipped) {
+                buy.text = "Equipped"
+                buy.isEnabled = false
             } else {
-                val t = "Equip"
-                buy.text = t
-                // equip
+                buy.text = "Equip"
+                buy.isEnabled = true
+            }
+        }
+
+        buy.setOnClickListener(){
+            if (buy.text == "Equip"){
+                // equip item
+                viewmodel.equipItem(itm)
+
+//                viewmodel.equipItem(itm)
+//                val txt = "Equipped"
+//                buy.text = txt
+//                buy.isEnabled = false
             }
         }
 

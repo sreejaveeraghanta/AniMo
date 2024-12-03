@@ -1,5 +1,6 @@
 package AniMo.com.ui.store
 
+import AniMo.com.MainViewModel
 import AniMo.com.R
 import AniMo.com.database.Item
 import AniMo.com.database.User
@@ -35,7 +36,6 @@ class StoreFragment : Fragment() {
     private lateinit var gridViewMusic: GridView
     private lateinit var gridViewBG: GridView
 
-
     private lateinit var storeViewModel: StoreViewModel
     private lateinit var arrayList: List<Item>
     private lateinit var database: FirebaseDatabase
@@ -57,17 +57,6 @@ class StoreFragment : Fragment() {
         invenButton.setOnClickListener() {
             // open inventory page
             findNavController().navigate(R.id.action_storeFragment_to_inventoryFragment)
-
-//            val transaction = parentFragmentManager.beginTransaction()
-//            transaction.replace(R.id.fragment_container, fragmentB)
-//            transaction.addToBackStack(null)
-//            transaction.commit()
-
-//            val intent = Intent(activity, InventoryActivity::class.java)
-//            startActivity(intent)
-//            val transact = requireActivity().supportFragmentManager.beginTransaction()
-//            transact.replace(R.id.storepage, InventoryActivity())
-//            transact.commit()
         }
 
         // get user
@@ -78,7 +67,6 @@ class StoreFragment : Fragment() {
 
         // item list by name: Winter Gift, Underwater Flowing, Cold Aurora Nights, Beach Views, Rock On, Vinyl House, Tokyo Cafe, Flower Blossom's Orchestral, Backyard Lofi, Country Menu
         //get data and
-
 
 
         storeViewModel = ViewModelProvider(this).get(StoreViewModel::class.java)
@@ -92,8 +80,7 @@ class StoreFragment : Fragment() {
             //compare user owned items to store items
 
         storeViewModel.bgs.observe(viewLifecycleOwner) {
-            gridAdaptBG.replace(it)
-            gridAdaptBG.notifyDataSetChanged()
+
             if (uid != null) {
                 val toRemove = it.toMutableList() // Create a mutable copy of the list
                 // If the user already owns a background, don't display it in the store
@@ -115,6 +102,8 @@ class StoreFragment : Fragment() {
                     }
                 }
             }
+            gridAdaptBG.replace(it)
+            gridAdaptBG.notifyDataSetChanged()
         }
         storeViewModel.getBackgroundsData()
 
@@ -123,8 +112,6 @@ class StoreFragment : Fragment() {
         gridAdaptMusic = GridAdapter(arrayList, storeViewModel, uid, requireActivity())
         gridViewMusic.adapter = gridAdaptMusic
         storeViewModel.music.observe(viewLifecycleOwner) { it ->
-            gridAdaptMusic.replace(it)
-            gridAdaptMusic.notifyDataSetChanged()
 
             if (uid != null) {
                 val toRemove = it.toMutableList() // Create a mutable copy of the list
@@ -146,6 +133,9 @@ class StoreFragment : Fragment() {
                         gridAdaptMusic.notifyDataSetChanged()
                     }
                 }
+            } else {
+                gridAdaptMusic.replace(it)
+                gridAdaptMusic.notifyDataSetChanged()
             }
         }
 
