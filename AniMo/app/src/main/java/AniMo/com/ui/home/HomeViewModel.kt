@@ -13,6 +13,13 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import AniMo.com.database.Pet
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.FirebaseDatabase
 import java.lang.IllegalArgumentException
@@ -79,14 +86,45 @@ class HomeViewModel(val uid: String?) : ViewModel() {
         _carpetResId.value = resourceId
     }
 
-    private val _currentAnimation = MutableLiveData<String?>()
-    val currentAnimation: LiveData<String?> = _currentAnimation
+    private val viewModelScope = CoroutineScope(Dispatchers.Main + Job())
 
-    // Pet interaction handler
+    // Pet instance
+    private val pet = Pet(
+        mood = "Happy",
+        hunger = 50,
+        level = 1,
+        experiencePoints = 0,
+        currentAnimation = "teen_idle_animation"
+    )
+
+    fun setHungerToZero() {
+        pet.hunger = 0
+    }
+
+    // Change the pet's level (e.g., evolve from Teen to Adult)
+    fun changePetLevel(newLevel: Int) {
+        pet.level = newLevel
+        playAnimation("teen_grow_animation", 1000L) // Switch to appropriate idle animation
+    }
+
+    // LiveData for current animation
+    private val _currentAnimation = MutableLiveData<String>().apply {
+        value = pet.currentAnimation
+    }
+    val currentAnimation: LiveData<String> = _currentAnimation
+
+    // Handle interactions
     fun handleInteraction(interactionType: String, duration: Long) {
         when (interactionType) {
-            "How do you feel?" -> playAnimation("happy_animation", duration)
-            else -> playAnimation("idle_animation", 0L) // Default fallback
+            "How do you feel?" -> {
+                val animationType = pet.evaluateMoodAnimation()
+                playAnimation(animationType, duration)
+            }
+            "Feed" -> {
+                pet.feed(20) // Feed the pet and increase hunger
+                playAnimation(if (pet.level == 2) "feed_animation" else "teen_feed_animation", duration)
+            }
+            else -> playAnimation(pet.getIdleAnimation(), 0L)
         }
     }
 
@@ -94,11 +132,17 @@ class HomeViewModel(val uid: String?) : ViewModel() {
         _currentAnimation.value = animationType
 
         if (duration > 0) {
-            // Reset to idle after the animation duration
-            Handler(Looper.getMainLooper()).postDelayed({
-                _currentAnimation.value = "idle_animation"
-            }, duration)
+            viewModelScope.launch {
+                delay(duration)
+                pet.currentAnimation = pet.getIdleAnimation()
+                _currentAnimation.value = pet.getIdleAnimation()
+            }
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelScope.cancel() // Clean up coroutines
     }
 
     class HomeViewModelFactory (private val uid: String?) : ViewModelProvider.Factory {

@@ -23,18 +23,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="4dp"
-        android:text="Feed"
+        android:text="Feed My Pet"
         android:background="@drawable/chatbox_option_background"
         android:textColor="@android:color/white"
         android:layout_marginBottom="4dp" />
 
     <Button
-        android:id="@+id/chatbox_option_play"
+        android:id="@+id/chatbox_option_dev_set_hunger"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="4dp"
-        android:text="Play"
+        android:text="Dev: Set hunger to zero"
         android:background="@drawable/chatbox_option_background"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="4dp" />
+
+    <Button
+        android:id="@+id/chatbox_option_dev_set_level"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Dev: Change to Adult"
+        android:background="@drawable/chatbox_option_background"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="4dp" />
+
 
 </LinearLayout>

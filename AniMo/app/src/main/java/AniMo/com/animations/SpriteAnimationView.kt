@@ -72,7 +72,18 @@ class SpriteAnimationView @JvmOverloads constructor(
             val frameY = (currentFrame / (it.width / frameWidth)) * frameHeight
 
             val srcRect = Rect(frameX, frameY, frameX + frameWidth, frameY + frameHeight)
-            val destRect = Rect(0, 0, width, height)
+
+            // Calculate consistent aspect ratio for destination rect
+            val aspectRatio = frameWidth.toFloat() / frameHeight.toFloat()
+            val destWidth = width
+            val destHeight = (destWidth / aspectRatio).toInt()
+
+            val destRect = Rect(
+                (width - destWidth) / 2, // Center horizontally
+                (height - destHeight) / 2, // Center vertically
+                (width + destWidth) / 2,
+                (height + destHeight) / 2
+            )
 
             canvas.drawBitmap(it, srcRect, destRect, paint)
         }
@@ -113,7 +124,7 @@ class SpriteAnimationView @JvmOverloads constructor(
             try {
                 val options = BitmapFactory.Options().apply {
                     inPreferredConfig = Bitmap.Config.RGB_565
-                    inSampleSize = 3
+                    inSampleSize = 5
                 }
                 val bitmap = BitmapFactory.decodeResource(resources, resourceId, options)
 
@@ -162,6 +173,80 @@ class SpriteAnimationView @JvmOverloads constructor(
                 frameDuration = 1000L / 60,
                 pingPongMode = true
             )
+            "hungry_animation" -> loadSpriteSheetAsync(
+                resourceId = R.drawable.sheet_duck_hungry,
+                rows = 8,
+                columns = 13,
+                totalFrames = 102,
+                frameDuration = 1000L / 60,
+                pingPongMode = false
+            )
+            "mad_animation" -> loadSpriteSheetAsync(
+                resourceId = R.drawable.sheet_duck_mad,
+                rows = 6,
+                columns = 14,
+                totalFrames = 81,
+                frameDuration = 1000L / 60,
+                pingPongMode = false
+            )
+            "feed_animation" -> loadSpriteSheetAsync(
+                resourceId = R.drawable.sheet_duck_feed,
+                rows = 5,
+                columns = 10,
+                totalFrames = 50,
+                frameDuration = 1000L / 60,
+                pingPongMode = false
+            )
+            "teen_happy_animation" -> loadSpriteSheetAsync(
+                resourceId = R.drawable.sheet_teen_happy,
+                rows = 5,
+                columns = 5,
+                totalFrames = 25,
+                frameDuration = 1000L / 60,
+                pingPongMode = true
+            )
+            "teen_idle_animation" -> loadSpriteSheetAsync(
+                resourceId = R.drawable.sheet_teen_idle,
+                rows = 9,
+                columns = 3,
+                totalFrames = 27,
+                frameDuration = 1000L / 60,
+                pingPongMode = true
+            )
+            "teen_hungry_animation" -> loadSpriteSheetAsync(
+                resourceId = R.drawable.sheet_teen_hungry,
+                rows = 7,
+                columns = 15,
+                totalFrames = 100,
+                frameDuration = 1000L / 60,
+                pingPongMode = false
+            )
+            "teen_mad_animation" -> loadSpriteSheetAsync(
+                resourceId = R.drawable.sheet_teen_mad,
+                rows = 3,
+                columns = 15,
+                totalFrames = 45,
+                frameDuration = 1000L / 60,
+                pingPongMode = false
+            )
+            "teen_feed_animation" -> loadSpriteSheetAsync(
+                resourceId = R.drawable.sheet_teen_feed,
+                rows = 5,
+                columns = 4,
+                totalFrames = 20,
+                frameDuration = 1000L / 60,
+                pingPongMode = false
+            )
+            "teen_grow_animation" -> loadSpriteSheetAsync(
+                resourceId = R.drawable.sheet_teen_grow,
+                rows = 7,
+                columns = 9,
+                totalFrames = 61,
+                frameDuration = 1000L / 60,
+                pingPongMode = false
+            )
+
+
             else -> throw IllegalArgumentException("Unknown animation type: $animationType")
         }
         startAnimation()

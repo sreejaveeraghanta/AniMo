@@ -110,12 +110,18 @@ class HomeFragment : Fragment() {
         }
 
         chatboxView.findViewById<Button>(R.id.chatbox_option_feed).setOnClickListener {
-            homeViewModel.handleInteraction("Feed", 3000L)
+            homeViewModel.handleInteraction("Feed", 4000L)
             parent.removeView(chatboxView)
         }
 
-        chatboxView.findViewById<Button>(R.id.chatbox_option_play).setOnClickListener {
-            homeViewModel.handleInteraction("Play", 5000L)
+        // Handle the new "Dev: Set hunger to zero" button
+        chatboxView.findViewById<Button>(R.id.chatbox_option_dev_set_hunger).setOnClickListener {
+            homeViewModel.setHungerToZero() // Call ViewModel to set hunger to zero
+            parent.removeView(chatboxView)
+        }
+
+        chatboxView.findViewById<Button>(R.id.chatbox_option_dev_set_level).setOnClickListener {
+            homeViewModel.changePetLevel(2) // Change to Adult level
             parent.removeView(chatboxView)
         }
     }
