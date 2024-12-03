@@ -26,9 +26,15 @@
         android:layout_height="wrap_content"
         android:text="Date: 12/12/2024" />
 
+
     <TextView
         android:id="@+id/task_time_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Time: 14:30" />
+    <TextView
+        android:id="@+id/task_duration_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Duration: 14:30" />
 </LinearLayout>

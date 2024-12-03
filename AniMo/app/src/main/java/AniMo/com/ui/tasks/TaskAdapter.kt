@@ -8,29 +8,31 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class TaskAdapter(private val tasks: List<Task>) :
-    RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
-
-    class TaskViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val taskName: TextView = view.findViewById(R.id.task_name_view)
-        val taskPriority: TextView = view.findViewById(R.id.task_priority_view)
-        val taskDate: TextView = view.findViewById(R.id.task_date_view)
-        val taskTime: TextView = view.findViewById(R.id.task_time_view)
-    }
+class TaskAdapter(private val taskList: MutableList<Task>) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.task_item, parent, false)
-        return TaskViewHolder(view)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.task_item, parent, false)
+        return TaskViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        val task = tasks[position]
+        val task = taskList[position]
         holder.taskName.text = task.name
         holder.taskPriority.text = "Priority: ${task.priority}"
-        holder.taskDate.text = "Date: ${task.date}"
-        holder.taskTime.text = "Time: ${task.time}"
+        holder.taskDate.text = task.date
+        holder.taskTime.text = task.time
+        holder.taskDuration.text = "Duration: ${task.duration} mins"
     }
 
-    override fun getItemCount(): Int = tasks.size
+    override fun getItemCount(): Int {
+        return taskList.size
+    }
+
+    inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val taskName: TextView = itemView.findViewById(R.id.task_name_view)
+        val taskPriority: TextView = itemView.findViewById(R.id.task_priority_view)
+        val taskDate: TextView = itemView.findViewById(R.id.task_date_view)
+        val taskTime: TextView = itemView.findViewById(R.id.task_time_view)
+        val taskDuration: TextView = itemView.findViewById(R.id.task_duration_view)
+    }
 }

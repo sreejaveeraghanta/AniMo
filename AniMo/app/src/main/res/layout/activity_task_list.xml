@@ -31,18 +31,18 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Add Task"
-
             android:textColor="@android:color/white"
-            android:layout_marginEnd="8dp" />
+            android:layout_marginEnd="8dp"
+ />
 
         <Button
             android:id="@+id/back_to_home_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Back to Home"
-
-            android:textColor="@android:color/white" />
+            android:text="Back"
+            android:textColor="@android:color/white"
+ />
     </LinearLayout>
 
     <!-- RecyclerView for the Task List -->
@@ -52,8 +52,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:padding="8dp"
-        android:clipToPadding="false"
-        />
+        android:clipToPadding="false" />
 
     <!-- History Button -->
     <Button
@@ -64,5 +63,6 @@
         android:layout_marginBottom="16dp"
         android:text="View History"
         android:textColor="@android:color/white"
-        android:elevation="4dp" />
+        android:elevation="4dp"
+     />
 </LinearLayout>

@@ -1,5 +1,7 @@
 package AniMo.com.database
 
+import AniMo.com.ui.tasks.Task
+
 data class User(
     val name: String = "",
     val email: String = "",
@@ -14,4 +16,6 @@ data class User(
     val backgroundsOwned: List<String> = listOf(),
     val musicOwned: List<String> = listOf(),
     val backgroundEquipped: String = "",
+    val tasks: MutableList<Task> = mutableListOf()
+
 )
