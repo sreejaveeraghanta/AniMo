@@ -1,131 +1,104 @@
 package AniMo.com.ui.tasks
 
 import AniMo.com.R
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
-import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.DatePicker
-import android.widget.EditText
-import android.widget.SeekBar
-import android.widget.TextView
-import android.widget.TimePicker
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import java.util.Calendar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class NewTaskActivity : AppCompatActivity() {
-
-    private lateinit var taskNameInput: EditText
-    private lateinit var slider: SeekBar
-    private lateinit var priorityDisplay: TextView
-    private lateinit var dateButton: Button
-    private lateinit var timeButton: Button
-    private lateinit var durationInput: EditText
+    private lateinit var taskName: EditText
+    private lateinit var taskDate: EditText
+    private lateinit var taskTime: EditText
+    private lateinit var taskPriority: Spinner
+    private lateinit var taskDuration: EditText
     private lateinit var saveButton: Button
     private lateinit var cancelButton: Button
 
-    private var selectedDate: String = ""
-    private var selectedTime: String = ""
+    private val database = FirebaseDatabase.getInstance()
+    private val reference = database.reference
+    private val auth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_task)
 
-        // Initialize views
-        taskNameInput = findViewById(R.id.task_name)
-        slider = findViewById(R.id.task_priority_slider)
-        priorityDisplay = findViewById(R.id.priority_display)
-        dateButton = findViewById(R.id.select_date_button)
-        timeButton = findViewById(R.id.select_time_button)
-        durationInput = findViewById(R.id.task_duration)
-        saveButton = findViewById(R.id.save_task_button)
-        cancelButton = findViewById(R.id.cancel_task_button)
+        taskName = findViewById(R.id.task_name)
+        taskDate = findViewById(R.id.select_date_button)
+        taskTime = findViewById(R.id.select_time_button)
+        taskPriority = findViewById(R.id.task_priority)
+        taskDuration = findViewById(R.id.task_duration)
+        saveButton = findViewById(R.id.save_button)
+        cancelButton = findViewById(R.id.cancel_button)
 
-        val calendar = Calendar.getInstance()
+        val priorities = arrayOf("Low", "Medium", "High")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, priorities)
+        taskPriority.adapter = adapter
 
-        // Priority slider listener
-        slider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                priorityDisplay.text = "Priority: $progress"
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-        })
-
-        // Date picker dialog
-        dateButton.setOnClickListener {
-            val datePicker = DatePickerDialog(
-                this,
-                { _, year, month, dayOfMonth ->
-                    selectedDate = "${dayOfMonth}/${month + 1}/$year"
-                    dateButton.text = "Date: $selectedDate"
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-            )
-            datePicker.show()
-        }
-
-        // Time picker dialog
-        timeButton.setOnClickListener {
-            val timePicker = TimePickerDialog(
-                this,
-                { _, hour, minute ->
-                    selectedTime = "${String.format("%02d", hour)}:${String.format("%02d", minute)}"
-                    timeButton.text = "Time: $selectedTime"
-                },
-                calendar.get(Calendar.HOUR_OF_DAY),
-                calendar.get(Calendar.MINUTE),
-                true
-            )
-            timePicker.show()
-        }
-
-        // Save button logic
         saveButton.setOnClickListener {
-            val taskName = taskNameInput.text.toString()
-            val priority = slider.progress
-            val durationText = durationInput.text.toString()
+            val name = taskName.text.toString()
+            val date = taskDate.text.toString()
+            val time = taskTime.text.toString()
+            val priority = taskPriority.selectedItemPosition
+            val duration = taskDuration.text.toString().toIntOrNull() ?: 0
+            val userId = auth.currentUser?.uid
 
-            if (taskName.isEmpty() || selectedDate.isEmpty() || selectedTime.isEmpty() || durationText.isEmpty()) {
-                Toast.makeText(this, "Please fill all fields!", Toast.LENGTH_SHORT).show()
+            if (userId != null) {
+                val newTask = Task(name, priority, date, time, duration)
+                saveTaskWithDateValidation(newTask, userId)
             } else {
-                val duration = durationText.toIntOrNull()
-                if (duration == null || duration <= 0) {
-                    Toast.makeText(this, "Please enter a valid duration!", Toast.LENGTH_SHORT).show()
-                } else {
-                    val newTask = Task(taskName, priority, selectedDate, selectedTime, duration)
-                    saveTask(newTask)
-                    Toast.makeText(this, "Task saved!", Toast.LENGTH_SHORT).show()
-
-                    val intent = Intent(this, TaskListActivity::class.java)
-                    startActivity(intent)
-                }
+                Toast.makeText(this, "User not logged in.", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // Cancel button logic
         cancelButton.setOnClickListener {
-            Toast.makeText(this, "Task creation cancelled", Toast.LENGTH_SHORT).show()
             finish()
         }
     }
 
-    private fun saveTask(task: Task) {
-        val sharedPreferences = getSharedPreferences("tasks", MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        val gson = Gson()
-        val json = sharedPreferences.getString("task_list", null)
-        val type = object : TypeToken<MutableList<Task>>() {}.type
-        val taskList: MutableList<Task> = gson.fromJson(json, type) ?: mutableListOf()
-        taskList.add(task)
-        editor.putString("task_list", gson.toJson(taskList))
-        editor.apply()
+    private fun saveTaskWithDateValidation(newTask: Task, uid: String) {
+        isDateAvailable(newTask.date, uid) { isAvailable ->
+            if (isAvailable) {
+                val taskId = reference.child("Users").child(uid).child("Tasks").push().key
+                if (taskId != null) {
+                    reference.child("Users").child(uid).child("Tasks").child(taskId).setValue(newTask)
+                        .addOnSuccessListener {
+                            Toast.makeText(this, "Task added successfully!", Toast.LENGTH_SHORT).show()
+                            finish() // Return to previous activity
+                        }
+                        .addOnFailureListener { error ->
+                            Toast.makeText(this, "Error saving task: ${error.message}", Toast.LENGTH_SHORT).show()
+                        }
+                }
+            } else {
+                Toast.makeText(this, "You already have a task on this date. Please choose another date.", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun isDateAvailable(newTaskDate: String, uid: String, callback: (Boolean) -> Unit) {
+        reference.child("Users").child(uid).child("Tasks")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    var isAvailable = true
+                    for (taskSnapshot in snapshot.children) {
+                        val existingTask = taskSnapshot.getValue(Task::class.java)
+                        if (existingTask != null && newTaskDate == existingTask.date) {
+                            isAvailable = false
+                            break
+                        }
+                    }
+                    callback(isAvailable)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(this@NewTaskActivity, "Error checking tasks: ${error.message}", Toast.LENGTH_SHORT).show()
+                    callback(false)
+                }
+            })
     }
 }

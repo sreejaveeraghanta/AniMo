@@ -9,52 +9,51 @@
     android:gravity="center_vertical"
     tools:context=".ui.tasks.NewTaskActivity">
 
-    <!-- Task Label -->
+    <!-- Page Title -->
     <TextView
-        android:id="@+id/task_page_label"
+        android:id="@+id/new_task_page_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Enter Task Details"
+        android:text="Create New Task"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_marginBottom="24dp"
         android:gravity="center_horizontal" />
 
-    <!-- Task Name Input -->
+    <!-- Task Title Input -->
     <EditText
         android:id="@+id/task_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter Task Name"
+        android:hint="Task Title"
         android:inputType="text"
         android:layout_marginBottom="16dp" />
 
-    <!-- Task Priority Slider -->
+    <!-- Priority Section -->
     <TextView
-        android:id="@+id/slider_label"
+        android:id="@+id/priority_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Task Priority:"
+        android:text="Select Priority Level:"
         android:layout_marginTop="16dp" />
 
-
     <SeekBar
-        android:id="@+id/task_priority_slider"
+        android:id="@+id/priority_seek_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:max="10"
         android:progress="5"
         android:layout_marginTop="8dp" />
 
-    <!-- Selected Priority Display -->
     <TextView
-        android:id="@+id/priority_display"
+        android:id="@+id/task_priority"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Priority: 5"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp" />
 
+    <!-- Duration Section -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -64,7 +63,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Duration (minutes):"
+            android:text="Duration (mins):"
             android:layout_marginEnd="8dp" />
 
         <EditText
@@ -72,34 +71,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="number"
-            android:hint="e.g., 60" />
+            android:hint="e.g., 30" />
     </LinearLayout>
 
-    <!-- Date and Time Buttons -->
+    <!-- Date and Time Section -->
     <Button
         android:id="@+id/select_date_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Select Date"
+        android:text="Choose Date"
         android:layout_marginBottom="12dp" />
-
 
     <Button
         android:id="@+id/select_time_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Select Time"
+        android:text="Choose Time"
         android:layout_marginBottom="24dp" />
 
-    <!-- Spacer to push buttons to the bottom -->
-
-    <!-- Save and Cancel Buttons -->
-
+    <!-- Spacer -->
     <View
         android:layout_width="match_parent"
         android:layout_height="950dp"
         android:layout_weight="1" />
 
+    <!-- Save and Cancel Actions -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -108,15 +104,15 @@
         android:layout_marginTop="24dp">
 
         <Button
-            android:id="@+id/save_task_button"
+            android:id="@+id/save_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Save Task"
+            android:text="Save"
             android:layout_marginEnd="16dp"
             android:layout_weight="1" />
 
         <Button
-            android:id="@+id/cancel_task_button"
+            android:id="@+id/cancel_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Cancel"

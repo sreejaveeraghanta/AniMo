@@ -31,7 +31,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Add Task"
-
             android:textColor="@android:color/white"
             android:layout_marginEnd="8dp" />
 
@@ -41,19 +40,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Back to Home"
-
             android:textColor="@android:color/white" />
     </LinearLayout>
 
     <!-- RecyclerView for the Task List -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/task_recycler_view"
+        android:id="@+id/recycler_task_list"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="8dp"
-        android:clipToPadding="false"
-        />
+        android:layout_height="match_parent" />
 
     <!-- History Button -->
     <Button
