@@ -39,9 +39,9 @@
         android:name="AniMo.com.ui.inventory.InventoryFragment"
         android:label="Inventory"
         tools:layout="@layout/fragment_inventory">
-<!--        <action-->
-<!--            android:id="@+id/action_inventoryFragment_to_storeFragment"-->
-<!--            app:destination="@id/navigation_store" />-->
+        <action
+            android:id="@+id/action_inventoryFragment_to_storeFragment"
+            app:destination="@id/navigation_store" />
     </fragment>
 
 </navigation>

@@ -7,17 +7,24 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import AniMo.com.databinding.ActivityMainBinding
+import AniMo.com.ui.inventory.InventoryViewModel
 import AniMo.com.ui.tasks.NewTaskActivity
 import android.content.Intent
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var auth: FirebaseAuth
+    private lateinit var mainViewModel: MainViewModel
+    private lateinit var viewModelFactory: MainViewModel.MainViewModelFactory
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        println("CHECK 1")
         binding = ActivityMainBinding.inflate(layoutInflater)
         setSupportActionBar(findViewById(R.id.appBar))
         setContentView(binding.root)
@@ -44,8 +51,25 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_store
             )
         )
+        println("CHECK 2")
 
         navView.setupWithNavController(navController)
+
+
+
+        if (uid != null){
+            viewModelFactory = MainViewModel.MainViewModelFactory(uid)
+            // hearts
+            mainViewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
+            mainViewModel.userhearts.observe(this) {
+                binding.heartnumtextview.text = it.toString()
+            }
+            mainViewModel.updateHearts()
+            println("CHECK 3")
+
+
+        }
+        println("CHECK 4")
 
         binding.logout.setOnClickListener {
             auth = FirebaseAuth.getInstance()
@@ -53,6 +77,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
+        println("CHECK 5")
 
         binding.fab.setOnClickListener {
             val intent = Intent(this, NewTaskActivity::class.java)
