@@ -1,18 +1,13 @@
 package AniMo.com.ui.home
 
 import AniMo.com.R
-import AniMo.com.animations.PetAnimator
-import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class HomeViewModel : ViewModel() {
-
-    //private var petAnimator: PetAnimator? = null
 
     // Background resource ID
     private val _backgroundResId = MutableLiveData<Int>().apply {
@@ -33,19 +28,6 @@ class HomeViewModel : ViewModel() {
     fun setCarpet(resourceId: Int) {
         _carpetResId.value = resourceId
     }
-
-    // Initialize PetAnimator and start wandering
-//    fun initializePetAnimator(context: Context, petView: ImageView) {
-//        petAnimator = PetAnimator(context, petView).apply {
-//            startAnimation()
-//        }
-//    }
-
-    // Stop the animator to release resources when no longer needed
-//    fun stopPetAnimator() {
-//        petAnimator?.stop()
-//    }
-
 
     private val _currentAnimation = MutableLiveData<String?>()
     val currentAnimation: LiveData<String?> = _currentAnimation

@@ -25,6 +25,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".SignupActivity"/>
+        <activity android:name=".ui.friends.AddFriendActivity"/>
+        <activity android:name=".ui.friends.displayStatsActivity"/>
+
         <activity
             android:name=".MainActivity"
             android:exported="false">

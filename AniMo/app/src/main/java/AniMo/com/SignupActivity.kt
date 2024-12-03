@@ -27,7 +27,6 @@ class SignupActivity : AppCompatActivity() {
 
     private lateinit var name: EditText
     private lateinit var password: EditText
-    private lateinit var username: EditText
     private lateinit var email: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,9 +40,8 @@ class SignupActivity : AppCompatActivity() {
             name = findViewById(R.id.name)
             password = findViewById(R.id.password)
             email = findViewById(R.id.email)
-            username = findViewById(R.id.username)
 
-            if (name.text.isNotEmpty() && username.text.isNotEmpty() && password.text.isNotEmpty() && email.text.isNotEmpty()) {
+            if (name.text.isNotEmpty() && password.text.isNotEmpty() && email.text.isNotEmpty()) {
                 val nameValue = name.text.toString()
                 val passwordValue = password.text.toString()
                 val emailAddress = email.text.toString()
