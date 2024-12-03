@@ -10,6 +10,7 @@ data class User(
     val visitors: Int = 0,
     val visited: Int = 0,
     val timeSpent: Double = 0.0,
+    val friendList: List<String> = listOf(),
     val backgroundsOwned: List<String> = listOf(),
     val musicOwned: List<String> = listOf(),
     val backgroundEquipped: String = "",

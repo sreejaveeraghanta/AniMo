@@ -26,12 +26,6 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <SearchView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            app:iconifiedByDefault="false"/>
-
         <ImageButton
             android:id="@+id/add_friends_button"
             android:layout_width="wrap_content"
