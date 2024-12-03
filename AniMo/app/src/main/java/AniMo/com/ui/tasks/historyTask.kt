@@ -1,6 +1,7 @@
 package AniMo.com.ui.tasks
 
 import AniMo.com.R
+import AniMo.com.Util
 import AniMo.com.database.User
 import android.content.Intent
 import android.os.Bundle
@@ -50,20 +51,24 @@ class historyTask : AppCompatActivity() {
 
     private fun loadCompletedTasks() {
         val userId = firebaseAuth.currentUser?.uid ?: return
-        val userRef = database.getReference("users/$userId")
+        val userRef = database.getReference("Users/$userId")
 
         userRef.get().addOnSuccessListener { snapshot ->
             val currentUser = snapshot.getValue(User::class.java)
             if (currentUser != null) {
                 val currentDate = LocalDate.now()
-                val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-
+                val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                 // Filter and display completed tasks
-                val completedTasks = currentUser.tasks.filter { task ->
+                val completedTasks = currentUser.tasks.filter {task ->
                     val taskDate = LocalDate.parse(task.date, dateFormatter)
-                    task.isCompleted && taskDate.isBefore(currentDate)
+                    taskDate.isBefore(currentDate)
                 }
-
+                println(completedTasks)
+                if (completedTasks.size > currentUser.tasksCompleted) {
+                    for (task in completedTasks) {
+                        Util.updateStats(userId, task.duration*10, completedTasks.size - currentUser.tasksCompleted, task.duration.toDouble(), 0, 0, 0)
+                    }
+                }
                 taskList.clear()
                 taskList.addAll(completedTasks)
                 taskAdapter.notifyDataSetChanged()

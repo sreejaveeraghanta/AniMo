@@ -91,6 +91,13 @@
         android:text="Select Time"
         android:layout_marginBottom="24dp" />
 
+    <TextView
+        android:id="@+id/all_tasks"
+        android:layout_width="match_parent"
+        android:gravity="center_horizontal"
+        android:text="View All Tasks"
+        android:layout_height="wrap_content"/>
+
     <!-- Spacer to push buttons to the bottom -->
 
     <!-- Save and Cancel Buttons -->

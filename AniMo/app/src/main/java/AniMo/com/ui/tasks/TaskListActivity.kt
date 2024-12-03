@@ -55,7 +55,7 @@ class TaskListActivity : AppCompatActivity() {
 
     private fun loadTasksFromFirebase() {
         val userId = firebaseAuth.currentUser?.uid ?: return
-        val userRef = database.getReference("users/$userId")
+        val userRef = database.getReference("Users/$userId")
         userRef.get().addOnSuccessListener { snapshot ->
             val currentUser = snapshot.getValue(User::class.java)
             if (currentUser != null) {
