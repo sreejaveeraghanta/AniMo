@@ -133,10 +133,12 @@ class StoreFragment : Fragment() {
                         gridAdaptMusic.notifyDataSetChanged()
                     }
                 }
-            } else {
-                gridAdaptMusic.replace(it)
-                gridAdaptMusic.notifyDataSetChanged()
             }
+
+            gridAdaptMusic.replace(it)
+            gridAdaptMusic.notifyDataSetChanged()
+
+
         }
 
         storeViewModel.getMusicData()
